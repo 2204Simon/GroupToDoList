@@ -7,10 +7,26 @@ const TodoList: React.FC = () => {
   const [todos, setTodos] = useState<Todo[]>([]);
   const [inputValue, setInputValue] = useState("");
 
-  const addTodo = () => {
-    const newTodo = { id: Date.now(), text: inputValue };
-    setTodos((prevTodos) => [...prevTodos, newTodo]);
-    setInputValue("");
+  const addTodo = async () => {
+    const newTodo = { text: inputValue, id: Date.now() };
+
+    // Senden Sie eine POST-Anforderung an Ihren Server
+    const response = await fetch("http://localhost:3001/api/addToDo", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(newTodo),
+    });
+
+    // Überprüfen Sie, ob die Anforderung erfolgreich war
+    if (response.ok) {
+      // Fügen Sie das neue Todo zur lokalen Liste hinzu
+      setTodos((prevTodos) => [...prevTodos, newTodo]);
+      setInputValue("");
+    } else {
+      console.error("Fehler beim Hinzufügen des Todos:", response.statusText);
+    }
   };
 
   return (
