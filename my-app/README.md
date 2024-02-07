@@ -1,11 +1,11 @@
 ## Gruppen To-Do-Liste
+
 ```markdown
-
 Dieses Projekt ist eine einfache Gruppen-To-Do-Liste, die mit React und TypeScript erstellt wurde.
-
-
 ```
+
 ## Installation
+
 Zuerst müssen Sie die Abhängigkeiten installieren:
 
 ```bash
@@ -18,7 +18,8 @@ Um die Anwendung zu starten, führen Sie den folgenden Befehl aus:
 npm start
 ```
 
-Die Anwendung wird auf [http://localhost:3000](http://localhost:3000) laufen.
+Das Frontend läuft auf [http://localhost:3000](http://localhost:3000).
+Das Backend läuft auf [http://localhost:3001](http://localhost:3001).
 
 ## CouchDB Docker Container
 
@@ -28,4 +29,4 @@ Um die CouchDB-Datenbank zu starten, müssen Sie Docker auf Ihrem Computer insta
 docker-compose up
 ```
 
-Dies wird einen CouchDB-Container auf Port 5984 starten. Sie können auf die CouchDB-Instanz zugreifen, indem Sie [http://localhost:5984](http://localhost:5984) in Ihrem Webbrowser eingeben.
+Dies wird einen CouchDB-Container auf Port 5984 starten. Sie können auf die CouchDB Admin Oberfläche zugreifen, indem Sie [http://localhost:5984/\_utils/](http://localhost:5984/_utils/) in Ihrem Webbrowser eingeben.
