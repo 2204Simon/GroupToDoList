@@ -11,7 +11,7 @@ const TodoList: React.FC = () => {
     const newTodo = { text: inputValue, id: Date.now() };
 
     // Senden Sie eine POST-Anforderung an Ihren Server
-    const response = await fetch("http://localhost:3001/api/addToDo", {
+    const response = await fetch("http://localhost:4001/api/addToDo", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

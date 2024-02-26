@@ -21,17 +21,24 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// Erstellen Sie die Datenbank beim Starten des Servers
-couch.createDatabase(dbName).then(
-  () => {
-    console.log("Database created");
-  },
-  (err: any) => {
-    console.log("Error creating database", err);
+// Überprüfen, ob die Datenbank existiert, bevor Sie sie erstellen
+couch.listDatabases().then((dbs: string[]) => {
+  if (dbs.includes(dbName)) {
+    console.log("Datenbank existiert bereits");
+  } else {
+    // Datenbank erstellen
+    couch.createDatabase(dbName).then(
+      () => {
+        console.log("Datenbank erfolgreich erstellt");
+      },
+      (err: Error) => {
+        console.error(err);
+      }
+    );
   }
-);
+});
 
-app.listen(3001, () => console.log("Server is running on port 3001"));
+app.listen(4001, () => console.log("Server is running on port 4001"));
 
 app.post("/api/addToDo", async (req, res) => {
   const newTodo = req.body;
