@@ -1,12 +1,25 @@
+// src/components/TodoListItem.tsx
 import React from "react";
-import { Todo } from "../types/types";
+import { Todo, TodoListItemProps } from "../types/types";
 
-interface TodoListItemProps {
-  todo: Todo;
+interface TodoListItemActions {
+  // onDelete: (id: string) => void;
 }
 
-const TodoListItem: React.FC<TodoListItemProps> = ({ todo }) => {
-  return <li>{todo.text}</li>;
+const TodoListItem: React.FC<TodoListItemProps & TodoListItemActions> = ({
+  todo,
+  // onDelete,
+}) => {
+  // const handleDelete = () => {
+  //   onDelete(todo._id);
+  // };
+
+  return (
+    <div>
+      <strong>{todo.title}</strong>: {todo.description}{" "}
+      {/* <button onClick={handleDelete}>Löschen</button> */}
+    </div>
+  );
 };
 
 export default TodoListItem;
