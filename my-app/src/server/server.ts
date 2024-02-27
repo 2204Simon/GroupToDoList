@@ -17,7 +17,13 @@ const couch = new NodeCouchDb({
 const dbName = "db";
 const app = express();
 
-app.use(cors());
+const corsOptions = {
+  origin: "http://localhost:3000",
+  methods: "GET, POST, PUT, DELETE",
+  credentials: true,
+};
+
+app.use(cors(corsOptions));
 app.use(express.json());
 
 couch.listDatabases().then((dbs: string[]) => {
@@ -64,16 +70,24 @@ app.post("/todos", async (req, res) => {
   }
 });
 
-// app.delete("/todos/:id", async (req, res) => {
-//   const todoId = req.params.id;
-
-//   try {
-//     const result = await couch.del(dbName, todoId, {});
-//     res.json(result);
-//   } catch (error) {
-//     console.error(error);
-//     res.status(500).json({ error: "Internal Server Error" });
-//   }
-// });
+app.delete("/todos/:id", async (req, res) => {
+  try {
+    const id = req.params.id;
+    const todo = await couch.get(dbName, id);
+    if (todo.data._id) {
+      const deletedTodo = await couch.del(
+        dbName,
+        todo.data._id,
+        todo.data._rev
+      );
+      res.json(deletedTodo.data);
+    } else {
+      res.status(404).json({ error: "To-Do not found" });
+    }
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
 
 app.listen(4001, () => console.log("Server is running on port 4001"));
