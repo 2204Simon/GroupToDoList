@@ -4,18 +4,17 @@ import { TodoListProps } from "../types/types";
 import TodoListItem from "./ToDoListItem";
 
 interface TodoListActions {
-  // onDelete: (id: string) => void;
+  onDelete: (id: string) => void;
 }
 
 const TodoList: React.FC<TodoListProps & TodoListActions> = ({
   todos,
-  // onDelete,
+  onDelete,
 }) => {
   return (
     <div>
       {todos.map((todo) => (
-        // <TodoListItem key={todo._id} todo={todo} onDelete={onDelete} />
-        <TodoListItem key={todo._id} todo={todo} />
+        <TodoListItem key={todo._id} todo={todo} onDelete={onDelete} />
       ))}
     </div>
   );

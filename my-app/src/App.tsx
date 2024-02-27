@@ -1,4 +1,3 @@
-// src/index.tsx
 import React, { useState, useEffect } from "react";
 import { Todo } from "./types/types";
 import TodoList from "./components/ToDoList";
@@ -40,24 +39,23 @@ const App: React.FC = () => {
     }
   };
 
-  // const deleteTodo = async (id: string) => {
-  //   try {
-  //     await fetch(`http://localhost:4001/todos/${id}`, {
-  //       method: "DELETE",
-  //     });
+  const deleteTodo = async (id: string) => {
+    try {
+      await fetch(`http://localhost:4001/todos/${id}`, {
+        method: "DELETE",
+      });
 
-  //     loadTodos();
-  //   } catch (error) {
-  //     console.error(error);
-  //   }
-  // };
+      loadTodos();
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   return (
     <div>
       <h1>Gruppen To-Do-Verwaltung</h1>
 
-      {/* <TodoList todos={todos} onDelete={deleteTodo} /> */}
-      <TodoList todos={todos} />
+      <TodoList todos={todos} onDelete={deleteTodo} />
 
       <form onSubmit={addTodo}>
         <label htmlFor="title">Titel:</label>
