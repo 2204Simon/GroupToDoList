@@ -8,7 +8,7 @@ pnpm-debug.log*
 lerna-debug.log*
 
 # alles im ordner dbdata ignorieren
-dbdata/*
+/dbdata/*
 
 #gitignore
 node_modules
