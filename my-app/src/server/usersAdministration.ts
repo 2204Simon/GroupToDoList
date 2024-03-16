@@ -1,17 +1,7 @@
 import express from 'express';
-import NodeCouchDb from 'node-couchdb';
 import { v4 as uuidv4 } from 'uuid';
 import bcrypt from 'bcrypt';
-
-const couch = new NodeCouchDb({
-  auth: {
-    user: process.env.COUCHDB_USER,
-    pass: process.env.COUCHDB_PASSWORD,
-  },
-  host: 'localhost',
-  protocol: 'http',
-  port: 5984,
-});
+import { couch } from './server.ts';
 
 const dbName = 'users'; // Change this to your user database name
 export const UserAdministrationRouter = express.Router();
@@ -20,6 +10,9 @@ export const UserAdministrationRouter = express.Router();
 UserAdministrationRouter.post('/users', async (req, res) => {
   try {
     const { username, email, password } = req.body;
+    if (!password || typeof password !== 'string') {
+      return res.status(400).json({ error: 'Invalid password' });
+    }
     const hashedPassword = await bcrypt.hash(password, 10); // Hash the password
     const user = await couch.insert(dbName, {
       username,

@@ -3,10 +3,13 @@ import NodeCouchDb from 'node-couchdb'
 import dotenv from 'dotenv'
 import cors from 'cors'
 import { UserAdministrationRouter } from './usersAdministration.ts'
-
+import bodyParser from 'body-parser';
+import { checkAndCreateDatabases } from './couchUtilities.ts'
 
 
 dotenv.config()
+
+
 export const couch = new NodeCouchDb({
   auth: {
     user: process.env.COUCHDB_USER,
@@ -18,6 +21,7 @@ export const couch = new NodeCouchDb({
 })
 
 const dbName = 'db'
+const dbNameUsers = 'users'
 const app = express()
 
 const corsOptions = {
@@ -27,23 +31,10 @@ const corsOptions = {
 }
 
 app.use(cors(corsOptions))
+app.use(bodyParser.json());
 app.use("/api/",UserAdministrationRouter)
 app.use(express.json())
-
-couch.listDatabases().then((dbs: string[]) => {
-  if (dbs && dbs.includes(dbName)) {
-    console.log('Datenbank existiert bereits')
-  } else {
-    couch.createDatabase(dbName).then(
-      () => {
-        console.log('Datenbank erfolgreich erstellt')
-      },
-      (err: Error) => {
-        console.error(err)
-      },
-    )
-  }
-})
+checkAndCreateDatabases(couch, [dbName, dbNameUsers])
 
 // Beispiel-Endpunkt zum Abrufen aller To-Dos
 app.get('/todos', async (req, res) => {
