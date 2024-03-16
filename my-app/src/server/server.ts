@@ -2,9 +2,12 @@ import express from 'express'
 import NodeCouchDb from 'node-couchdb'
 import dotenv from 'dotenv'
 import cors from 'cors'
+import { UserAdministrationRouter } from './usersAdministration.ts'
+
+
 
 dotenv.config()
-const couch = new NodeCouchDb({
+export const couch = new NodeCouchDb({
   auth: {
     user: process.env.COUCHDB_USER,
     pass: process.env.COUCHDB_PASSWORD,
@@ -24,10 +27,11 @@ const corsOptions = {
 }
 
 app.use(cors(corsOptions))
+app.use("/api/",UserAdministrationRouter)
 app.use(express.json())
 
 couch.listDatabases().then((dbs: string[]) => {
-  if (dbs.includes(dbName)) {
+  if (dbs && dbs.includes(dbName)) {
     console.log('Datenbank existiert bereits')
   } else {
     couch.createDatabase(dbName).then(

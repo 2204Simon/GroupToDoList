@@ -5,7 +5,7 @@ import {
   LoginContainer,
   LoginInput,
 } from './Login.style'
-import localDB, { createUser, remoteDB } from '../db'
+import { createUser } from '../db'
 
 function Register() {
   const [username, setUsername] = useState('')
