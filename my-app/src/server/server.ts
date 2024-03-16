@@ -5,6 +5,7 @@ import cors from 'cors'
 import { UserAdministrationRouter } from './usersAdministration.ts'
 import bodyParser from 'body-parser';
 import { checkAndCreateDatabases } from './couchUtilities.ts'
+import { TodoAdministration } from './todoAdministration.ts'
 
 
 dotenv.config()
@@ -21,6 +22,7 @@ export const couch = new NodeCouchDb({
 })
 
 const dbName = 'db'
+const todoDbName = 'todo';
 const dbNameUsers = 'users'
 const app = express()
 
@@ -32,9 +34,9 @@ const corsOptions = {
 
 app.use(cors(corsOptions))
 app.use(bodyParser.json());
-app.use("/api/",UserAdministrationRouter)
+app.use("/api/",UserAdministrationRouter, TodoAdministration)
 app.use(express.json())
-checkAndCreateDatabases(couch, [dbName, dbNameUsers])
+checkAndCreateDatabases(couch, [dbName, dbNameUsers, todoDbName])
 
 // Beispiel-Endpunkt zum Abrufen aller To-Dos
 app.get('/todos', async (req, res) => {

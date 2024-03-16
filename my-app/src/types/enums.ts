@@ -3,3 +3,9 @@ export const enum DokumentTypes {
   GROUPTODOLIST = 'groupTodoList',
   TODO = 'todo',
 }
+
+export const enum Permissions {
+  ADMIN = 'admin',
+  BEARBEITER = 'bearbeiter',
+  LESER = 'leser',
+}
