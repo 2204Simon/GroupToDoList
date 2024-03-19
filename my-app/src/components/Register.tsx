@@ -5,21 +5,32 @@ import {
   LoginContainer,
   LoginInput,
 } from './Login.style'
-import { createUser } from '../db'
 
 function Register() {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [email, setEmail] = useState('')
 
-
   const handleRegister = async () => {
-    // Implement your registration logic here
-    await createUser({ userId: '1', username, password, email })
-    console.log(
-      `Registered with username: ${username}, email: ${email}, password: ${password}`,
-    )
-  }
+    const response = await fetch('http://localhost:4001/api/users', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        username,
+        password,
+        email,
+      }),
+    });
+  
+    if (response.ok) {
+      const data = await response.json();
+      console.log('Registration successful', data);
+    } else {
+      console.error('Registration failed');
+    }
+  };
 
   return (
     <LoginContainer>

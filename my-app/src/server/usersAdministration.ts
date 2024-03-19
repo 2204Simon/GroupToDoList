@@ -12,6 +12,7 @@ export const UserAdministrationRouter = express.Router();
 UserAdministrationRouter.post('/users', async (req, res) => {
   try {
     const { username, email, password } = req.body;
+    console.log(req.body);
     if (!password || typeof password !== 'string') {
       return res.status(400).json({ error: 'Invalid password' });
     }
@@ -22,7 +23,10 @@ UserAdministrationRouter.post('/users', async (req, res) => {
       password: hashedPassword, // Store the hashed password
       userId: uuidv4(),
     });
-    res.json(user.data);
+    console.log(user.data);
+    const token = generateAccessToken(user.data.id); // Generate a new token for the user
+    res.cookie('token', token, { httpOnly: true }); // Store the token in a cookie
+    res.status(201).json(user.data);
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: 'Internal Server Error' });

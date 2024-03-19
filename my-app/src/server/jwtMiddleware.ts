@@ -15,9 +15,11 @@ export const authenticateJWT = expressJwt.expressjwt({
   secret,
   algorithms: ['HS256'],
   getToken: function fromCookie(req:any) {
+    console.log(req.cookies,"req.cookies");
+    
     if (req.cookies && req.cookies.token) {
       return req.cookies.token;
     }
     return null;
   }
-});
+}).unless({ path: ['/api/users', '/api/login'] });
