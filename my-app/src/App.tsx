@@ -1,55 +1,58 @@
-import React, { useState, useEffect } from "react";
-import { Todo } from "./types/types";
-import TodoList from "./components/ToDoList";
+import React, { useState, useEffect } from 'react'
+import { Todo } from './types/types'
+import TodoList from './components/ToDoList'
 
 const App: React.FC = () => {
-  const [todos, setTodos] = useState<Todo[]>([]);
-  const [newTodo, setNewTodo] = useState({ title: "", description: "" });
+  const [todos, setTodos] = useState<Todo[]>([])
+  const [newTodo, setNewTodo] = useState({ title: '', description: '' })
 
   useEffect(() => {
-    loadTodos();
-  }, []);
+    loadTodos()
+  }, [])
 
   const loadTodos = async () => {
     try {
-      const response = await fetch("http://localhost:4001/todos");
-      const data = await response.json();
-      setTodos(data);
+      const response = await fetch('http://localhost:4001/todos', {
+        credentials: 'include',
+      })
+      const data = await response.json()
+      setTodos(data)
     } catch (error) {
-      console.error(error);
+      console.error(error)
     }
-  };
+  }
 
   const addTodo = async (event: React.FormEvent) => {
-    event.preventDefault();
+    event.preventDefault()
 
     try {
-      await fetch("http://localhost:4001/todos", {
-        method: "POST",
+      await fetch('http://localhost:4001/todos', {
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
+        credentials: 'include',
         body: JSON.stringify(newTodo),
-      });
+      })
 
-      loadTodos();
-      setNewTodo({ title: "", description: "" });
+      loadTodos()
+      setNewTodo({ title: '', description: '' })
     } catch (error) {
-      console.error(error);
+      console.error(error)
     }
-  };
+  }
 
   const deleteTodo = async (id: string) => {
     try {
       await fetch(`http://localhost:4001/todos/${id}`, {
-        method: "DELETE",
-      });
+        method: 'DELETE',
+      })
 
-      loadTodos();
+      loadTodos()
     } catch (error) {
-      console.error(error);
+      console.error(error)
     }
-  };
+  }
 
   return (
     <div>
@@ -82,7 +85,7 @@ const App: React.FC = () => {
         <button type="submit">To-Do hinzufügen</button>
       </form>
     </div>
-  );
-};
+  )
+}
 
-export default App;
+export default App

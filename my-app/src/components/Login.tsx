@@ -5,14 +5,40 @@ import {
   LoginContainer,
   LoginInput,
 } from './Login.style'
+import { useNavigate } from 'react-router-dom'
 
 function Login() {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
+  const navigate = useNavigate()
+  const handleLogin = async () => {
+    try {
+      const response = await fetch('http://localhost:4001/api/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email: username, password }),
+        credentials: 'include',
+      })
 
-  const handleLogin = () => {
-    // Implement your login logic here
-    console.log(`Logged with username: ${username} password: ${password}`)
+      if (!response.ok) {
+        throw new Error('Login failed')
+      }
+
+      const data = await response.json()
+
+      if (data.message === 'Login successful') {
+        console.log('Login successful')
+        navigate('/home')
+        // Handle successful login here
+      } else {
+        console.log('Login failed')
+        // Handle failed login here
+      }
+    } catch (error) {
+      console.error(error)
+    }
   }
 
   return (

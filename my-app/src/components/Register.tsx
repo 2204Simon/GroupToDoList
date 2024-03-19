@@ -5,11 +5,14 @@ import {
   LoginContainer,
   LoginInput,
 } from './Login.style'
+import { useNavigate } from 'react-router-dom'
 
 function Register() {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [email, setEmail] = useState('')
+
+  const navigate = useNavigate()
 
   const handleRegister = async () => {
     const response = await fetch('http://localhost:4001/api/users', {
@@ -22,15 +25,17 @@ function Register() {
         password,
         email,
       }),
-    });
-  
+      credentials: 'include',
+    })
+
     if (response.ok) {
-      const data = await response.json();
-      console.log('Registration successful', data);
+      const data = await response.json()
+      navigate('/login')
+      console.log('Registration successful', data)
     } else {
-      console.error('Registration failed');
+      console.error('Registration failed')
     }
-  };
+  }
 
   return (
     <LoginContainer>
