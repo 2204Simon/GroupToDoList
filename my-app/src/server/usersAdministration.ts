@@ -2,6 +2,8 @@ import express from 'express';
 import { v4 as uuidv4 } from 'uuid';
 import bcrypt from 'bcrypt';
 import { couch } from './server.ts';
+import { generateAccessToken } from './jwtMiddleware.ts';
+
 
 const dbName = 'users'; // Change this to your user database name
 export const UserAdministrationRouter = express.Router();
@@ -27,7 +29,6 @@ UserAdministrationRouter.post('/users', async (req, res) => {
   }
 });
 
-
 UserAdministrationRouter.post('/login', async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -47,6 +48,8 @@ UserAdministrationRouter.post('/login', async (req, res) => {
     const match = await bcrypt.compare(password, user.password);
 
     if (match) {
+      const token = generateAccessToken(user.userId); // Generate a new token for the user
+      res.cookie('token', token, { httpOnly: true }); // Store the token in a cookie
       res.json({ message: 'Login successful' });
     } else {
       res.status(400).json({ error: 'Invalid password' });
