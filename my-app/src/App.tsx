@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { Todo } from './types/types'
 import TodoList from './components/ToDoList'
+import CreateDatabase from './components/addList'
 
 const App: React.FC = () => {
   const [todos, setTodos] = useState<Todo[]>([])
@@ -12,11 +13,14 @@ const App: React.FC = () => {
 
   const loadTodos = async () => {
     try {
-      const response = await fetch('http://localhost:4001/todos', {
+      const response = await fetch('http://localhost:4001/api/todos', {
         credentials: 'include',
       })
       const data = await response.json()
-      setTodos(data)
+      console.log(data)
+      if (response.ok) {
+        setTodos(data)
+      }
     } catch (error) {
       console.error(error)
     }
@@ -26,7 +30,7 @@ const App: React.FC = () => {
     event.preventDefault()
 
     try {
-      await fetch('http://localhost:4001/todos', {
+      await fetch('http://localhost:4001/api/todos', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -59,7 +63,7 @@ const App: React.FC = () => {
       <h1>Gruppen To-Do-Verwaltung</h1>
 
       <TodoList todos={todos} onDelete={deleteTodo} />
-
+      <CreateDatabase />
       <form onSubmit={addTodo}>
         <label htmlFor="title">Titel:</label>
         <input
