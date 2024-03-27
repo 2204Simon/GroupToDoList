@@ -1,13 +1,6 @@
 import React from 'react'
 import TodoList from './ToDoList'
-
-interface ToDoListsProps {
-  todos: any[]
-  newTodo: any
-  setNewTodo: (todo: any) => void
-  addTodo: (event: React.FormEvent) => void
-  deleteTodo: (id: string) => void
-}
+import { ToDoListsProps } from '../types/types'
 
 const ToDoLists: React.FC<ToDoListsProps> = ({
   todos,
