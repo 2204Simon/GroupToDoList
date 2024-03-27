@@ -2,7 +2,7 @@ import React from 'react'
 import TodoList from './ToDoList'
 import { ToDoListsProps } from '../types/types'
 
-const ToDoLists: React.FC<ToDoListsProps> = ({
+const GroupToDoList: React.FC<ToDoListsProps> = ({
   todos,
   newTodo,
   setNewTodo,
@@ -11,7 +11,7 @@ const ToDoLists: React.FC<ToDoListsProps> = ({
 }) => {
   return (
     <>
-      <TodoList todos={todos} onDelete={deleteTodo} />
+      <TodoList todos={todos} onDelete={deleteTodo} id={''} title={''} />
 
       <form onSubmit={addTodo}>
         <label htmlFor="title">Titel:</label>
@@ -41,4 +41,4 @@ const ToDoLists: React.FC<ToDoListsProps> = ({
   )
 }
 
-export default ToDoLists
+export default GroupToDoList

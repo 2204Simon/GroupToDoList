@@ -5,6 +5,17 @@ export interface Todo {
   completed: boolean
 }
 
+export interface GroupTodoList {
+  _id: string
+  title: string
+  todos: Todo[]
+}
+
+export interface User {
+  userId: string
+  password: string
+  email: string
+}
 export interface ToDoListsProps {
   todos: any[]
   newTodo: any
@@ -13,60 +24,66 @@ export interface ToDoListsProps {
   deleteTodo: (id: string) => void
 }
 
+export interface TodoListProps {
+  id: string
+  title: string
+  todos: Todo[]
+}
+
 export interface TodoListItemProps {
   todo: Todo
 }
 
-;[
-  {
-    user: [
-      { userId: 'string', password: 'string', email: 'string' },
-      { userId: 'string', password: 'string', email: 'string' },
-    ],
+// ;[
+//   {
+//     user: [
+//       { userId: 'string', password: 'string', email: 'string' },
+//       { userId: 'string', password: 'string', email: 'string' },
+//     ],
 
-    groupTodoList: [
-      {
-        groupListId: 'string',
-        createdAt: 'string',
-        updatedAt: 'string',
-        title: 'string',
-        description: 'string',
-        deleted: 'boolean',
-        rights: [
-          {
-            admins: [{ userId: 'exampleUser', favorite: 'boolean' }],
-          },
-          { editor: [{ userId: 'exampleUser', favorite: 'boolean' }] },
-          { reader: [{ userId: 'exampleUser', favorite: 'boolean' }] },
-        ],
-      },
+//     groupTodoList: [
+//       {
+//         groupListId: 'string',
+//         createdAt: 'string',
+//         updatedAt: 'string',
+//         title: 'string',
+//         description: 'string',
+//         deleted: 'boolean',
+//         rights: [
+//           {
+//             admins: [{ userId: 'exampleUser', favorite: 'boolean' }],
+//           },
+//           { editor: [{ userId: 'exampleUser', favorite: 'boolean' }] },
+//           { reader: [{ userId: 'exampleUser', favorite: 'boolean' }] },
+//         ],
+//       },
 
-      {
-        todos: [
-          {
-            todoId: 'string',
-          },
-        ],
+//       {
+//         todos: [
+//           {
+//             todoId: 'string',
+//           },
+//         ],
 
-        todo: [
-          {
-            todoId: 'string',
-            title: 'string',
-            description: 'string',
-            completed: 'boolean',
-            deleted: 'boolean',
-            deadline: 'Date',
-            createdAt: 'string',
-            updatedAt: 'string',
-            label: {
-              labelId: 'string',
-              name: 'string',
-              color: 'string',
-              userId: 'string',
-            },
-          },
-        ],
-      },
-    ],
-  },
-]
+//         todo: [
+//           {
+//             todoId: 'string',
+//             title: 'string',
+//             description: 'string',
+//             completed: 'boolean',
+//             deleted: 'boolean',
+//             deadline: 'Date',
+//             createdAt: 'string',
+//             updatedAt: 'string',
+//             label: {
+//               labelId: 'string',
+//               name: 'string',
+//               color: 'string',
+//               userId: 'string',
+//             },
+//           },
+//         ],
+//       },
+//     ],
+//   },
+// ]

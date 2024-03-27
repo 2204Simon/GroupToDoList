@@ -1,10 +1,10 @@
 // src/components/TodoList.tsx
-import React from "react";
-import { TodoListProps } from "../types/types";
-import TodoListItem from "./ToDoListItem";
+import React from 'react'
+import { TodoListProps } from '../types/types'
+import TodoListItem from './ToDoListItem'
 
 interface TodoListActions {
-  onDelete: (id: string) => void;
+  onDelete: (id: string) => void
 }
 
 const TodoList: React.FC<TodoListProps & TodoListActions> = ({
@@ -17,7 +17,7 @@ const TodoList: React.FC<TodoListProps & TodoListActions> = ({
         <TodoListItem key={todo._id} todo={todo} onDelete={onDelete} />
       ))}
     </div>
-  );
-};
+  )
+}
 
-export default TodoList;
+export default TodoList
