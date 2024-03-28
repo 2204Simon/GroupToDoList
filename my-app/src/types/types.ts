@@ -32,57 +32,58 @@ export type User = {
   username: string
   password: string
   email: string
+  groupTodoLists?: [{_id: string, role: string}]
 }
-;[
-  {
-    user: [
-      { userId: 'string', password: 'string', email: 'string' },
-      { userId: 'string', password: 'string', email: 'string' },
-    ],
+// ;[
+//   {
+//     user: [
+//       { userId: 'string', password: 'string', email: 'string' },
+//       { userId: 'string', password: 'string', email: 'string' },
+//     ],
 
-    groupTodoList: [
-      {
-        groupListId: 'string',
-        createdAt: 'string',
-        updatedAt: 'string',
-        title: 'string',
-        description: 'string',
-        deleted: 'boolean',
-        rights: [
-          {
-            admins: [{ userId: 'exampleUser', favorite: 'boolean' }],
-          },
-          { editor: [{ userId: 'exampleUser', favorite: 'boolean' }] },
-          { reader: [{ userId: 'exampleUser', favorite: 'boolean' }] },
-        ],
-      },
+//     groupTodoList: [
+//       {
+//         groupListId: 'string',
+//         createdAt: 'string',
+//         updatedAt: 'string',
+//         title: 'string',
+//         description: 'string',
+//         deleted: 'boolean',
+//         rights: [
+//           {
+//             admins: [{ userId: 'exampleUser', favorite: 'boolean' }],
+//           },
+//           { editor: [{ userId: 'exampleUser', favorite: 'boolean' }] },
+//           { reader: [{ userId: 'exampleUser', favorite: 'boolean' }] },
+//         ],
+//       },
 
-      {
-        todos: [
-          {
-            todoId: 'string',
-          },
-        ],
+//       {
+//         todos: [
+//           {
+//             todoId: 'string',
+//           },
+//         ],
 
-        todo: [
-          {
-            todoId: 'string',
-            title: 'string',
-            description: 'string',
-            completed: 'boolean',
-            deleted: 'boolean',
-            deadline: 'Date',
-            createdAt: 'string',
-            updatedAt: 'string',
-            label: {
-              labelId: 'string',
-              name: 'string',
-              color: 'string',
-              userId: 'string',
-            },
-          },
-        ],
-      },
-    ],
-  },
-]
+//         todo: [
+//           {
+//             todoId: 'string',
+//             title: 'string',
+//             description: 'string',
+//             completed: 'boolean',
+//             deleted: 'boolean',
+//             deadline: 'Date',
+//             createdAt: 'string',
+//             updatedAt: 'string',
+//             label: {
+//               labelId: 'string',
+//               name: 'string',
+//               color: 'string',
+//               userId: 'string',
+//             },
+//           },
+//         ],
+//       },
+//     ],
+//   },
+// ]

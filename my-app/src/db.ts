@@ -20,6 +20,7 @@ export const createUser = async (user: User) => {
       name: user.username,
       email: user.email,
       password: user.password,
+      
       // Fügen Sie hier weitere Benutzerinformationen hinzu
     })
     console.log('User created successfully', response)
