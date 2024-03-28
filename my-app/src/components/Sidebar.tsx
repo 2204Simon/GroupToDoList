@@ -59,7 +59,16 @@ const Sidebar = () => {
       </CloseButton> */}
 
       <Block>
-        <h1>Allgemeine Daten</h1>
+        <h1>Menü</h1>
+        <div>
+          <StyledLink to="/Home">Home</StyledLink>
+        </div>
+        <div>
+          <StyledLink to="/Login">Login</StyledLink>
+        </div>
+        <div>
+          <StyledLink to="/Register">Register</StyledLink>
+        </div>
       </Block>
       <Block>
         <h1>To-Do-Listen</h1>
