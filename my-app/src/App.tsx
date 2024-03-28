@@ -38,10 +38,13 @@ const App: React.FC = () => {
       setTodos(data)
     } catch (error) {
       console.error(error)
+      console.error(error)
     }
+  }
   }
 
   const addTodo = async (event: React.FormEvent) => {
+    event.preventDefault()
     event.preventDefault()
 
     try {
@@ -49,8 +52,11 @@ const App: React.FC = () => {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'Content-Type': 'application/json',
         },
+        credentials: 'include',
         body: JSON.stringify(newTodo),
+      })
       })
 
       loadTodos()
@@ -86,17 +92,23 @@ const App: React.FC = () => {
       console.error('Es gab einen Fehler beim Senden der Anforderung', error)
     }
   }
+  }
 
   const deleteTodo = async (id: string) => {
     try {
       await fetch(`http://localhost:4001/todos/${id}`, {
         method: 'DELETE',
       })
+        method: 'DELETE',
+      })
 
+      loadTodos()
       loadTodos()
     } catch (error) {
       console.error(error)
+      console.error(error)
     }
+  }
   }
 
   return (
@@ -134,4 +146,5 @@ const App: React.FC = () => {
   )
 }
 
+export default App
 export default App

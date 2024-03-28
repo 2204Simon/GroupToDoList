@@ -1,5 +1,9 @@
 {
   "devDependencies": {
+    "@types/pouchdb": "^6.4.2",
     "prettier": "^3.2.5"
+  },
+  "dependencies": {
+    "pouchdb": "^8.0.1"
   }
 }
