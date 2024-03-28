@@ -1,16 +1,9 @@
 import React, { useState, useEffect } from 'react'
-import { Todo, GroupTodoList, TodoListProps } from './types/types'
-import GroupToDoList from './components/GroupToDoList'
+import {GroupTodoList} from './types/types'
 
 const App: React.FC = () => {
-  const [todos, setTodos] = useState<Todo[]>([])
-  const [newTodo, setNewTodo] = useState({ title: '', description: '' })
   const [newTodoList, setNewTodoList] = useState({ title: '' })
   const [todoLists, setTodoLists] = useState<GroupTodoList[]>([])
-
-  useEffect(() => {
-    loadTodos()
-  }, [])
 
   useEffect(() => {
     loadTodoLists()
@@ -26,36 +19,6 @@ const App: React.FC = () => {
       }))
       setTodoLists(todoLists)
       console.log(todoLists)
-    } catch (error) {
-      console.error(error)
-    }
-  }
-
-  const loadTodos = async () => {
-    try {
-      const response = await fetch('http://localhost:4001/todos')
-      const data = await response.json()
-      setTodos(data)
-    } catch (error) {
-      console.error(error)
-    }
-  }
-
-  const addTodo = async (event: React.FormEvent) => {
-    event.preventDefault()
-
-    try {
-      await fetch('http://localhost:4001/todos', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        credentials: 'include',
-        body: JSON.stringify(newTodo),
-      })
-
-      loadTodos()
-      setNewTodo({ title: '', description: '' })
     } catch (error) {
       console.error(error)
     }
@@ -87,50 +50,7 @@ const App: React.FC = () => {
       console.error('Es gab einen Fehler beim Senden der Anforderung', error)
     }
   }
-
-  const deleteTodo = async (id: string) => {
-    try {
-      await fetch(`http://localhost:4001/todos/${id}`, {
-        method: 'DELETE',
-      })
-
-      loadTodos()
-    } catch (error) {
-      console.error(error)
-    }
-  }
-
-  const editTodo = async (id: string, updatedTodo: Todo) => {
-    try {
-      await fetch(`http://localhost:4001/todos/${id}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(updatedTodo),
-      })
   
-      loadTodos()
-    } catch (error) {
-      console.error(error)
-    }
-  }
-
-  const completeTodo = async (id: string, isCompleted: boolean) => {
-    try {
-      await fetch(`http://localhost:4001/todos/${id}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ completed: isCompleted }),
-      })
-  
-      loadTodos()
-    } catch (error) {
-      console.error(error)
-    }
-  }
 
   return (
     <div>
@@ -153,15 +73,6 @@ const App: React.FC = () => {
       {todoLists.map((list, index) => (
         <div key={index}>{list.title}</div>
       ))}
-      <GroupToDoList
-        todos={todos}
-        newTodo={newTodo}
-        setNewTodo={setNewTodo}
-        addTodo={addTodo}
-        deleteTodo={deleteTodo}
-        editTodo={editTodo}
-        onComplete={completeTodo}
-      />
     </div>
   )
 }
