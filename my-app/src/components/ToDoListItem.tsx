@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { Todo, TodoListItemProps } from '../types/types'
-import { FaCheck, FaTimes } from 'react-icons/fa'; 
+import { FaCheck, FaTimes,  } from 'react-icons/fa'; 
+import { Pen, FloppyDisk, Trash} from 'phosphor-react';
 
 interface TodoListItemActions {
   onDelete: (id: string) => void,
@@ -50,10 +51,12 @@ const TodoListItem: React.FC<TodoListItemProps & TodoListItemActions> = ({
           <strong>{todo.title}</strong>: {todo.description}{' '}
         </>
       )}
-      <button onClick={handleDelete}>Löschen</button>
-      <button onClick={handleEdit}>{isEditing ? 'Speichern' : 'Bearbeiten'}</button>
+      <button onClick={handleDelete}><Trash size={30}/></button>
+      <button onClick={handleEdit}>{isEditing ? 
+      <FloppyDisk size={30}/>
+      : <Pen size={30}/>}</button>
       <button onClick={handleToggle}> 
-        {isCompleted ? <FaCheck /> : <FaTimes />} 
+        {isCompleted ? <FaCheck size={30} /> : <FaTimes size={30} />} 
       </button>
     </div>
   )
