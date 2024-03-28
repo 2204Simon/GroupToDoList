@@ -62,6 +62,10 @@ const Sidebar = () => {
         <h1>Allgemeine Daten</h1>
       </Block>
       <Block>
+        
+        <StyledLink to="/home">Home</StyledLink>
+      </Block>
+      <Block>
         <h1>To-Do-Listen</h1>
         <div>
           {testTodoIds.map((id) => (
