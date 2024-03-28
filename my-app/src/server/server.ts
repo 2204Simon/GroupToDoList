@@ -90,6 +90,7 @@ app.delete('/todos/:id', async (req, res) => {
 
 app.post('/todolists', async (req, res) => {
   try {
+    const { title } = req.body
     const id = uuidv4() // Generieren Sie eine eindeutige ID
     const dbName = `db_${id}`
 
@@ -98,6 +99,7 @@ app.post('/todolists', async (req, res) => {
       res.status(400).json({ error: 'Todo-Liste existiert bereits' })
     } else {
       await couch.createDatabase(dbName)
+      await couch.insert(dbName, { title }) // Fügen Sie den Titel der Todo-Liste in die Datenbank ein
       res.json({ message: 'Todo-Liste erfolgreich erstellt', id }) // Senden Sie die ID zurück
     }
   } catch (err) {
@@ -110,10 +112,18 @@ app.post('/todolists', async (req, res) => {
 app.get('/todolists', async (req, res) => {
   try {
     const dbs = await couch.listDatabases()
-    const todolists = dbs.map((dbName: string) => ({
-      id: dbName.replace('db_', ''),
-      title: dbName,
-    }))
+    const todolists = await Promise.all(
+      dbs.map(async (dbName: string) => {
+        const id = dbName.replace('db_', '')
+        const response = await couch.mango(dbName, { selector: {} }) // Abrufen der Daten aus der Datenbank
+        console.log(response) // Drucken Sie die Antwort
+        const {
+          data: { docs },
+        } = response
+        const title = docs[0]?.title || dbName // Verwenden Sie den Titel aus der Datenbank, falls vorhanden
+        return { id, title }
+      }),
+    )
     res.json(todolists) // Senden Sie die Liste der Todo-Listen als Array von Objekten zurück
   } catch (err) {
     console.error(err)

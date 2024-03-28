@@ -20,8 +20,9 @@ const App: React.FC = () => {
     try {
       const response = await fetch('http://localhost:4001/todolists')
       const data = await response.json()
-      const todoLists = data.map((dbName: string) => ({
-        title: dbName.replace('db_', ''),
+      const todoLists = data.map((todoList: { id: string; title: string }) => ({
+        id: todoList.id,
+        title: todoList.title,
       }))
       setTodoLists(todoLists)
       console.log(todoLists)
