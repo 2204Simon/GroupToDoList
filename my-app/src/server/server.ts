@@ -113,6 +113,29 @@ app.delete('/todos/:id', async (req, res) => {
     res.status(500).json({ error: 'Internal Server Error' })
   }
 })
+
+app.put('/todos/:id', async (req, res) => {
+  try {
+    const id = req.params.id
+    const { title, description, completed } = req.body
+    const todo = await couch.get(dbName, id)
+    if (todo.data._id) {
+      const updatedTodo = await couch.update(dbName, {
+        _id: todo.data._id,
+        _rev: todo.data._rev,
+        title,
+        description,
+        completed,
+      })
+      res.json(updatedTodo.data)
+    } else {
+      res.status(404).json({ error: 'To-Do not found' })
+    }
+  } catch (err) {
+    console.error(err)
+    res.status(500).json({ error: 'Internal Server Error' })
+  }
+})
 // Endpunkt zum Erstellen einer neuen Todo-Liste
 
 app.post('/todolists', async (req, res) => {

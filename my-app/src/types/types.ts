@@ -17,6 +17,7 @@ export interface ToDoListsProps {
   setNewTodo: (todo: any) => void
   addTodo: (event: React.FormEvent) => void
   deleteTodo: (id: string) => void
+  editTodo: (id: string, updatedTodo: Todo) => void;
 }
 
 export interface TodoListProps {

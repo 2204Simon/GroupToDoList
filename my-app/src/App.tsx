@@ -100,6 +100,22 @@ const App: React.FC = () => {
     }
   }
 
+  const editTodo = async (id: string, updatedTodo: Todo) => {
+    try {
+      await fetch(`http://localhost:4001/todos/${id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(updatedTodo),
+      })
+  
+      loadTodos()
+    } catch (error) {
+      console.error(error)
+    }
+  }
+
   return (
     <div>
       <h1>Gruppen To-Do-Verwaltung</h1>
@@ -127,6 +143,7 @@ const App: React.FC = () => {
         setNewTodo={setNewTodo}
         addTodo={addTodo}
         deleteTodo={deleteTodo}
+        editTodo={editTodo}
       />
     </div>
   )
