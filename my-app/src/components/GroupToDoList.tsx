@@ -2,6 +2,7 @@ import React from 'react'
 import {useEffect, useState} from 'react'
 import TodoList from './ToDoList'
 import { ToDoListsProps, Todo } from '../types/types'
+import { Plus } from 'phosphor-react'
 
 const GroupToDoList: React.FC<ToDoListsProps> = ({
 }) => {
@@ -109,7 +110,7 @@ const GroupToDoList: React.FC<ToDoListsProps> = ({
           required
         />
 
-        <button type="submit">To-Do hinzufügen</button>
+        <button type="submit"><Plus size={30} /></button>
       </form>
     </>
   )
