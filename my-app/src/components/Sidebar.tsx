@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { Link } from 'react-router-dom'
 import styled from 'styled-components'
 
 const SidebarWrapper = styled.div<{ isOpen: boolean }>`
@@ -36,6 +37,16 @@ const CloseButton = styled.div`
   color: #333; // Ändern Sie die Textfarbe in ein dunkleres Grau
 `
 
+const StyledLink = styled(Link)`
+  color: #333; // Ändern Sie die Textfarbe in ein dunkleres Grau
+  text-decoration: none; // Entfernt die Unterstreichung
+  &:hover {
+    color: #666; // Ändert die Farbe beim Überfahren mit der Maus
+  }
+`
+
+const testTodoIds = ['1', '2']
+
 const Sidebar = () => {
   const [isOpen, setIsOpen] = useState(true)
   const toggleSidebar = () => {
@@ -46,12 +57,21 @@ const Sidebar = () => {
       {/* <CloseButton onClick={toggleSidebar}>
         <XCircle size={24} />
       </CloseButton> */}
+
       <Block>
-        <h2>Allgemeine Daten</h2>
-        {/* Hier können Sie Ihre allgemeinen Daten einfügen */}
+        <h1>Allgemeine Daten</h1>
       </Block>
       <Block>
-        <h2>To-Do-Listen</h2>
+        <h1>To-Do-Listen</h1>
+        <div>
+          {testTodoIds.map((id) => (
+            <div>
+              <StyledLink key={id} to={`/todo/${id}`}>
+                To-Do-Liste {id}
+              </StyledLink>
+            </div>
+          ))}
+        </div>
         {/* Hier können Sie Ihre To-Do-Liste einfügen */}
       </Block>
       <LogoutButton
