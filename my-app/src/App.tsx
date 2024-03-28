@@ -38,13 +38,10 @@ const App: React.FC = () => {
       setTodos(data)
     } catch (error) {
       console.error(error)
-      console.error(error)
     }
-  }
   }
 
   const addTodo = async (event: React.FormEvent) => {
-    event.preventDefault()
     event.preventDefault()
 
     try {
@@ -52,11 +49,9 @@ const App: React.FC = () => {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Content-Type': 'application/json',
         },
         credentials: 'include',
         body: JSON.stringify(newTodo),
-      })
       })
 
       loadTodos()
@@ -75,7 +70,7 @@ const App: React.FC = () => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(newTodoList), // Senden Sie nur den Titel der Todo-Liste
+        body: JSON.stringify(newTodoList),
       })
 
       if (response.ok) {
@@ -92,59 +87,49 @@ const App: React.FC = () => {
       console.error('Es gab einen Fehler beim Senden der Anforderung', error)
     }
   }
-  }
 
   const deleteTodo = async (id: string) => {
     try {
       await fetch(`http://localhost:4001/todos/${id}`, {
         method: 'DELETE',
       })
-        method: 'DELETE',
-      })
 
-      loadTodos()
       loadTodos()
     } catch (error) {
       console.error(error)
-      console.error(error)
     }
-  }
   }
 
   return (
-    console.log('!!!!!', todoLists),
-    (
-      <div>
-        <h1>Gruppen To-Do-Verwaltung</h1>
-        <form onSubmit={addTodoList}>
-          <label htmlFor="title">Titel:</label>
-          <input
-            type="text"
-            id="title"
-            name="title"
-            value={newTodoList.title}
-            onChange={(e) =>
-              setNewTodoList({ ...newTodoList, title: e.target.value })
-            }
-            required
-          />
-          <button type="submit">To-Do Liste erstellen</button>
-        </form>
-
-        {todoLists.map((list, index) => (
-          <div key={index}>{list.title}</div>
-        ))}
-        <GroupToDoList
-          todos={todos}
-          newTodo={newTodo}
-          setNewTodo={setNewTodo}
-          addTodo={addTodo}
-          deleteTodo={deleteTodo}
+    <div>
+      <h1>Gruppen To-Do-Verwaltung</h1>
+      <form onSubmit={addTodoList}>
+        <label htmlFor="title">Titel:</label>
+        <input
+          type="text"
+          id="title"
+          name="title"
+          value={newTodoList.title}
+          onChange={(e) =>
+            setNewTodoList({ ...newTodoList, title: e.target.value })
+          }
+          required
         />
-      </div>
-    )
+        <button type="submit">To-Do Liste erstellen</button>
+      </form>
+
+      {todoLists.map((list, index) => (
+        <div key={index}>{list.title}</div>
+      ))}
+      <GroupToDoList
+        todos={todos}
+        newTodo={newTodo}
+        setNewTodo={setNewTodo}
+        addTodo={addTodo}
+        deleteTodo={deleteTodo}
+      />
+    </div>
   )
 }
 
-export default App
 export default App

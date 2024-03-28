@@ -9,6 +9,7 @@ import { TodoAdministration } from './todoAdministration.ts'
 import { authenticateJWT } from './jwtMiddleware.ts'
 import cookieParser from 'cookie-parser'
 import { TodoDatabaseCreation } from './groupTodoLists.tsx'
+import { v4 as uuidv4 } from 'uuid'
 
 dotenv.config()
 
@@ -46,7 +47,6 @@ app.use(
 )
 checkAndCreateDatabases(couch, [dbName, dbNameUsers, todoDbName])
 
-app.listen(4001, () => console.log('Server is running on port 4001'))
 app.use(cors(corsOptions))
 app.use(express.json())
 
