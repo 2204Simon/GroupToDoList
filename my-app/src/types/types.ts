@@ -11,11 +11,6 @@ export interface GroupTodoList {
   todos: Todo[]
 }
 
-export interface User {
-  userId: string
-  password: string
-  email: string
-}
 export interface ToDoListsProps {
   todos: any[]
   newTodo: any
@@ -29,7 +24,6 @@ export interface TodoListProps {
 }
 
 export interface TodoListItemProps {
-  todo: Todo
   todo: Todo
 }
 
