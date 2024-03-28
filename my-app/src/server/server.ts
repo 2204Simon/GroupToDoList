@@ -110,7 +110,11 @@ app.post('/todolists', async (req, res) => {
 app.get('/todolists', async (req, res) => {
   try {
     const dbs = await couch.listDatabases()
-    res.json(dbs) // Senden Sie die Liste der Datenbanken zurück
+    const todolists = dbs.map((dbName: string) => ({
+      id: dbName.replace('db_', ''),
+      title: dbName,
+    }))
+    res.json(todolists) // Senden Sie die Liste der Todo-Listen als Array von Objekten zurück
   } catch (err) {
     console.error(err)
     res.status(500).json({ error: 'Internal Server Error' })

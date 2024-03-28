@@ -20,7 +20,11 @@ const App: React.FC = () => {
     try {
       const response = await fetch('http://localhost:4001/todolists')
       const data = await response.json()
-      setTodoLists(data)
+      const todoLists = data.map((dbName: string) => ({
+        title: dbName.replace('db_', ''),
+      }))
+      setTodoLists(todoLists)
+      console.log(todoLists)
     } catch (error) {
       console.error(error)
     }
@@ -69,6 +73,7 @@ const App: React.FC = () => {
 
       if (response.ok) {
         console.log('Todo-Liste erfolgreich erstellt')
+        loadTodoLists()
       } else {
         const errorData = await response.json()
         console.log(
@@ -94,34 +99,37 @@ const App: React.FC = () => {
   }
 
   return (
-    <div>
-      <h1>Gruppen To-Do-Verwaltung</h1>
-      <form onSubmit={addTodoList}>
-        <label htmlFor="title">Titel:</label>
-        <input
-          type="text"
-          id="title"
-          name="title"
-          value={newTodoList.title}
-          onChange={(e) =>
-            setNewTodoList({ ...newTodoList, title: e.target.value })
-          }
-          required
+    console.log('!!!!!', todoLists),
+    (
+      <div>
+        <h1>Gruppen To-Do-Verwaltung</h1>
+        <form onSubmit={addTodoList}>
+          <label htmlFor="title">Titel:</label>
+          <input
+            type="text"
+            id="title"
+            name="title"
+            value={newTodoList.title}
+            onChange={(e) =>
+              setNewTodoList({ ...newTodoList, title: e.target.value })
+            }
+            required
+          />
+          <button type="submit">To-Do Liste erstellen</button>
+        </form>
+
+        {todoLists.map((list, index) => (
+          <div key={index}>{list.title}</div>
+        ))}
+        <GroupToDoList
+          todos={todos}
+          newTodo={newTodo}
+          setNewTodo={setNewTodo}
+          addTodo={addTodo}
+          deleteTodo={deleteTodo}
         />
-        <button type="submit">To-Do Liste erstellen</button>
-      </form>
-      //noch bugs
-      {todoLists.map((list, index) => (
-        <div key={index}>{list.title}</div>
-      ))}
-      <GroupToDoList
-        todos={todos}
-        newTodo={newTodo}
-        setNewTodo={setNewTodo}
-        addTodo={addTodo}
-        deleteTodo={deleteTodo}
-      />
-    </div>
+      </div>
+    )
   )
 }
 
