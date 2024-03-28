@@ -58,12 +58,16 @@ const Sidebar = () => {
         <XCircle size={24} />
       </CloseButton> */}
 
+      <h1>Menü</h1>
+
       <Block>
-        <h1>Allgemeine Daten</h1>
+        <StyledLink to="/home">Home</StyledLink>
       </Block>
       <Block>
-        
-        <StyledLink to="/home">Home</StyledLink>
+        <StyledLink to="/Login">Login</StyledLink>
+      </Block>
+      <Block>
+        <StyledLink to="/Register">Register</StyledLink>
       </Block>
       <Block>
         <h1>To-Do-Listen</h1>
@@ -79,11 +83,9 @@ const Sidebar = () => {
         {/* Hier können Sie Ihre To-Do-Liste einfügen */}
       </Block>
       <Block>
-        
         <StyledLink to="/login">Login</StyledLink>
       </Block>
       <Block>
-        
         <StyledLink to="/register">Registrieren</StyledLink>
       </Block>
       <LogoutButton
