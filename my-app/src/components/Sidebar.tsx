@@ -67,7 +67,7 @@ const Sidebar = () => {
         <StyledLink to="/Login">Login</StyledLink>
       </Block>
       <Block>
-        <StyledLink to="/Register">Register</StyledLink>
+        <StyledLink to="/Register">Registrieren</StyledLink>
       </Block>
       <Block>
         <h1>To-Do-Listen</h1>
@@ -82,12 +82,8 @@ const Sidebar = () => {
         </div>
         {/* Hier können Sie Ihre To-Do-Liste einfügen */}
       </Block>
-      <Block>
-        <StyledLink to="/login">Login</StyledLink>
-      </Block>
-      <Block>
-        <StyledLink to="/register">Registrieren</StyledLink>
-      </Block>
+      
+      
       <LogoutButton
         onClick={() => {
           /* Hier können Sie Ihre Ausloggen-Funktion einfügen */
