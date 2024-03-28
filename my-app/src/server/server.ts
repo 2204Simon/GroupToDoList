@@ -6,10 +6,12 @@ import { UserAdministrationRouter } from './usersAdministration.ts'
 import bodyParser from 'body-parser'
 import { checkAndCreateDatabases } from './couchUtilities.ts'
 import { TodoAdministration } from './todoAdministration.ts'
-import { authenticateJWT } from './jwtMiddleware.ts'
+import { authenticateJWT, getUserIdFromToken } from './jwtMiddleware.ts'
 import cookieParser from 'cookie-parser'
 import { TodoDatabaseCreation } from './groupTodoLists.tsx'
 import { v4 as uuidv4 } from 'uuid'
+import { validate as isUuid } from 'uuid';
+
 
 dotenv.config()
 
@@ -37,6 +39,7 @@ const corsOptions = {
 app.use(cors(corsOptions))
 app.use(cookieParser())
 app.use(bodyParser.json())
+//app.use(authenticateJWT)
 // app.use(authenticateJWT)
 app.use(express.json())
 app.use(
@@ -46,6 +49,7 @@ app.use(
   TodoDatabaseCreation,
 )
 checkAndCreateDatabases(couch, [dbName, dbNameUsers, todoDbName])
+
 
 app.use(cors(corsOptions))
 app.use(express.json())
@@ -109,6 +113,51 @@ app.delete('/todos/:id', async (req, res) => {
     res.status(500).json({ error: 'Internal Server Error' })
   }
 })
+
+app.put('/todos/:id', async (req, res) => {
+  try {
+    const id = req.params.id
+    const { title, description, completed } = req.body
+    const todo = await couch.get(dbName, id)
+    if (todo.data._id) {
+      const updatedTodo = await couch.update(dbName, {
+        _id: todo.data._id,
+        _rev: todo.data._rev,
+        title,
+        description,
+        completed,
+      })
+      res.json(updatedTodo.data)
+    } else {
+      res.status(404).json({ error: 'To-Do not found' })
+    }
+  } catch (err) {
+    console.error(err)
+    res.status(500).json({ error: 'Internal Server Error' })
+  }
+})
+
+app.put('/todos/:id', async (req, res) => {
+  try {
+    const id = req.params.id
+    const { completed } = req.body
+    const todo = await couch.get(dbName, id)
+    if (todo.data._id) {
+      const updatedTodo = await couch.update(dbName, {
+        _id: todo.data._id,
+        _rev: todo.data._rev,
+        completed,
+      })
+      res.json(updatedTodo.data)
+    } else {
+      res.status(404).json({ error: 'To-Do not found' })
+    }
+  } catch (err) {
+    console.error(err)
+    res.status(500).json({ error: 'Internal Server Error' })
+  }
+})
+
 // Endpunkt zum Erstellen einer neuen Todo-Liste
 
 app.post('/todolists', async (req, res) => {
@@ -118,6 +167,7 @@ app.post('/todolists', async (req, res) => {
     const dbName = `db_${id}`
 
     const dbs = await couch.listDatabases()
+
     if (dbs.includes(dbName)) {
       res.status(400).json({ error: 'Todo-Liste existiert bereits' })
     } else {
@@ -131,27 +181,43 @@ app.post('/todolists', async (req, res) => {
   }
 })
 
-// Endpunkt zum Abrufen aller Todo-Listen
+
 app.get('/todolists', async (req, res) => {
   try {
-    const dbs = await couch.listDatabases()
+    if (!req.cookies.token) {
+      res.status(401).json({ error: 'No token provided' });
+      return;
+    }
+    const userId = getUserIdFromToken(req.cookies.token);
+    
+    ;
+    if (!userId) {
+      res.status(404).json({ error: 'User not found' });
+      return;
+    }
+    const dbs = await couch.listDatabases();
+    const user = await couch.get(dbNameUsers, userId);
+    
     const todolists = await Promise.all(
-      dbs.map(async (dbName: string) => {
-        const id = dbName.replace('db_', '')
-        const response = await couch.mango(dbName, { selector: {} }) // Abrufen der Daten aus der Datenbank
-        console.log(response) // Drucken Sie die Antwort
-        const {
-          data: { docs },
-        } = response
-        const title = docs[0]?.title || dbName // Verwenden Sie den Titel aus der Datenbank, falls vorhanden
-        return { id, title }
-      }),
-    )
-    res.json(todolists) // Senden Sie die Liste der Todo-Listen als Array von Objekten zurück
+      user.data.groupTodoLists
+        .filter((todoList: { _id: any; role: any }) => isUuid(todoList._id))
+        .map(async (todoList: { _id: any; role: any }) => {
+          const dbName = `db_${todoList._id}`;
+          if (!dbs.includes(dbName)) {
+            return null; // Wenn die Datenbank nicht existiert, überspringen Sie sie
+          }
+          const db = couch.use(dbName);
+          const title = await db.get('title');
+          return { id: todoList._id, title: title.data };
+        }
+      )
+    );
+    res.json(todolists.filter((todoList: any) => todoList !== null));
   } catch (err) {
-    console.error(err)
-    res.status(500).json({ error: 'Internal Server Error' })
+    console.error(err);
+    res.status(500).json({ error: 'Internal Server Error' });
   }
-})
+}
+);
 
 app.listen(4001, () => console.log('Server is running on port 4001'))

@@ -21,6 +21,7 @@ UserAdministrationRouter.post('/users', async (req, res) => {
       email,
       password: hashedPassword, // Store the hashed password
       userId: uuidv4(),
+      groupTodoLists: [],
     })
     console.log(user.data)
     const token = generateAccessToken(user.data.id) // Generate a new token for the user

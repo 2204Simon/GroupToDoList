@@ -44,9 +44,6 @@ function Login() {
   return (
     
     <LoginContainer>
-       <h1  className="text-3xl font-bold underline text-red-500">
-      Hello world!
-    </h1>
       <LoginCard>
         <h2>Login</h2>
         <LoginInput

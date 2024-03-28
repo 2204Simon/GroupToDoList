@@ -71,6 +71,10 @@ const Sidebar = () => {
         </div>
       </Block>
       <Block>
+        
+        <StyledLink to="/home">Home</StyledLink>
+      </Block>
+      <Block>
         <h1>To-Do-Listen</h1>
         <div>
           {testTodoIds.map((id) => (
@@ -82,6 +86,14 @@ const Sidebar = () => {
           ))}
         </div>
         {/* Hier können Sie Ihre To-Do-Liste einfügen */}
+      </Block>
+      <Block>
+        
+        <StyledLink to="/login">Login</StyledLink>
+      </Block>
+      <Block>
+        
+        <StyledLink to="/register">Registrieren</StyledLink>
       </Block>
       <LogoutButton
         onClick={() => {
