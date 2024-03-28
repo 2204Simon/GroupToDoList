@@ -8,11 +8,12 @@ const GroupToDoList: React.FC<ToDoListsProps> = ({
   setNewTodo,
   addTodo,
   deleteTodo,
-  editTodo
+  editTodo,
+  onComplete
 }) => {
   return (
     <>
-      <TodoList todos={todos} onDelete={deleteTodo} onEdit={editTodo} />
+      <TodoList todos={todos} onDelete={deleteTodo} onEdit={editTodo} onComplete={onComplete}/>
 
       <form onSubmit={addTodo}>
         <label htmlFor="title">Titel:</label>

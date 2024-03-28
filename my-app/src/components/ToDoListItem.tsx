@@ -1,18 +1,22 @@
 import React, { useState } from 'react'
 import { Todo, TodoListItemProps } from '../types/types'
+import { FaCheck, FaTimes } from 'react-icons/fa'; 
 
 interface TodoListItemActions {
   onDelete: (id: string) => void,
   onEdit: (id: string, updatedTodo: Todo) => void;
+  onComplete: (id: string, isCompleted: boolean) => void;
 }
 
 const TodoListItem: React.FC<TodoListItemProps & TodoListItemActions> = ({
   todo,
   onDelete,
   onEdit,
+  onComplete
 }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [updatedTodo, setUpdatedTodo] = useState(todo);
+  const [isCompleted, setIsCompleted] = useState(todo.completed); // Zustand für erledigte Todos
 
   const handleDelete = () => {
     onDelete(todo._id)
@@ -29,6 +33,11 @@ const TodoListItem: React.FC<TodoListItemProps & TodoListItemActions> = ({
     setUpdatedTodo({ ...updatedTodo, [event.target.name]: event.target.value });
   }
 
+  const handleToggle = () => { // Funktion zum Umschalten des erledigten Zustands
+    setIsCompleted(!isCompleted);
+    onComplete(todo._id, !isCompleted);
+  }
+
   return (
     <div>
       {isEditing ? (
@@ -43,6 +52,9 @@ const TodoListItem: React.FC<TodoListItemProps & TodoListItemActions> = ({
       )}
       <button onClick={handleDelete}>Löschen</button>
       <button onClick={handleEdit}>{isEditing ? 'Speichern' : 'Bearbeiten'}</button>
+      <button onClick={handleToggle}> 
+        {isCompleted ? <FaCheck /> : <FaTimes />} 
+      </button>
     </div>
   )
 }

@@ -18,6 +18,7 @@ export interface ToDoListsProps {
   addTodo: (event: React.FormEvent) => void
   deleteTodo: (id: string) => void
   editTodo: (id: string, updatedTodo: Todo) => void;
+  onComplete: (id: string, isCompleted: boolean) => void;
 }
 
 export interface TodoListProps {
