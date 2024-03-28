@@ -74,7 +74,7 @@ const Sidebar = () => {
         <div>
           {testTodoIds.map((id) => (
             <div>
-              <StyledLink key={id} to={`/todo/${id}`}>
+              <StyledLink key={id} to={`/todoList/${id}`}>
                 To-Do-Liste {id}
               </StyledLink>
             </div>
