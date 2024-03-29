@@ -4,6 +4,11 @@ export interface Todo {
   description: string
   completed: boolean
 }
+export type TodoListPouchListing = {
+  dbName: string
+  title: string
+  _id: string
+}
 
 export interface GroupTodoList {
   _id: string
@@ -17,8 +22,8 @@ export interface ToDoListsProps {
   setNewTodo: (todo: any) => void
   addTodo: (event: React.FormEvent) => void
   deleteTodo: (id: string) => void
-  editTodo: (id: string, updatedTodo: Todo) => void;
-  onComplete: (id: string, isCompleted: boolean) => void;
+  editTodo: (id: string, updatedTodo: Todo) => void
+  onComplete: (id: string, isCompleted: boolean) => void
 }
 
 export interface TodoListProps {
@@ -34,7 +39,7 @@ export type User = {
   username: string
   password: string
   email: string
-  groupTodoLists?: [{_id: string, role: string}]
+  groupTodoLists?: [{ _id: string; role: string }]
 }
 // ;[
 //   {

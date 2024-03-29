@@ -24,6 +24,21 @@ GroupToDoListRoutes.post('/todolists', async (req, res) => {
       const databaseId = uuidv4()
       console.log('Database ID:', databaseId)
       await couch.createDatabase(`db_${databaseId}`) // Erstellen Sie die Datenbank, wenn sie nicht existiert
+      await couch.request({
+        db: dbName,
+        method: 'put',
+        doc: '_security',
+        body: {
+          admins: {
+            names: [],
+            roles: [],
+          },
+          members: {
+            names: [],
+            roles: [],
+          },
+        },
+      })
       console.log('created new database!!!!!!!')
       res.cookie('database', `db_${databaseId}`, {
         httpOnly: false,
