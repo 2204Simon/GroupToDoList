@@ -9,8 +9,6 @@ import { TodoAdministration } from './todoAdministration.ts'
 import { authenticateJWT, getUserIdFromToken } from './jwtMiddleware.ts'
 import cookieParser from 'cookie-parser'
 import { TodoDatabaseCreation } from './groupTodoLists.tsx'
-import { v4 as uuidv4 } from 'uuid'
-import { validate as isUuid } from 'uuid'
 import { TodoRoutes } from './TodoRoutes.ts'
 import { GroupToDoListRoutes } from './GroupToDoListRoutes.ts'
 
@@ -41,7 +39,6 @@ app.use(cors(corsOptions))
 app.use(cookieParser())
 app.use(bodyParser.json())
 //app.use(authenticateJWT)
-// app.use(authenticateJWT)
 app.use(express.json())
 app.use(
   '/api/',
@@ -52,10 +49,6 @@ app.use(
   GroupToDoListRoutes,
 )
 checkAndCreateDatabases(couch, [dbName, dbNameUsers, todoDbName])
-
-app.use(cors(corsOptions))
-app.use(express.json())
-
 couch.listDatabases().then((dbs: string[]) => {
   if (dbs.includes(dbName)) {
     console.log('Datenbank existiert bereits')

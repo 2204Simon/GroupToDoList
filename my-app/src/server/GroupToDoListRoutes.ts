@@ -1,10 +1,10 @@
-import express from 'express';
+import express from 'express'
 import { couch } from './server.ts' // Importieren Sie die CouchDB-Instanz aus Ihrer Hauptserverdatei
-import { v4 as uuidv4 } from 'uuid';
-import { validate as isUuid } from 'uuid';
-import { getUserIdFromToken } from './jwtMiddleware.ts';
+import { v4 as uuidv4 } from 'uuid'
+import { validate as isUuid } from 'uuid'
+import { getUserIdFromToken } from './jwtMiddleware.ts'
 
-export const GroupToDoListRoutes= express.Router();
+export const GroupToDoListRoutes = express.Router()
 const dbNameUsers = 'users'
 // Endpunkt zum Erstellen einer neuen Todo-Liste
 
@@ -13,13 +13,15 @@ GroupToDoListRoutes.post('/todolists', async (req, res) => {
     console.log(req.cookies)
     const testToken = 'testtoken'
     const { title } = req.body
-    const { token } = req.cookies
+    const { database: cookieDatabaseId } = req.cookies
     const id = uuidv4() // Generieren Sie eine eindeutige ID
     const dbName = `${id}`
 
     const dbs = await couch.listDatabases()
-    if (!dbs.includes(testToken)) {
-      await couch.createDatabase(testToken) // Erstellen Sie die Datenbank, wenn sie nicht existiert
+    if (!dbs.includes(cookieDatabaseId) || !cookieDatabaseId) {
+      const databaseId = uuidv4()
+      await couch.createDatabase(databaseId) // Erstellen Sie die Datenbank, wenn sie nicht existiert
+      res.cookie('database', databaseId) // Setzen Sie den Cookie
     }
     await couch.insert(testToken, { _id: uuidv4(), title, dbName })
 
@@ -38,15 +40,7 @@ GroupToDoListRoutes.post('/todolists', async (req, res) => {
 
 GroupToDoListRoutes.get('/todolists', async (req, res) => {
   try {
-    if (!req.cookies.token) {
-      res.status(401).json({ error: 'No token provided' })
-      return
-    }
     const userId = getUserIdFromToken(req.cookies.token)
-     
-    
-
-
     if (!userId) {
       res.status(404).json({ error: 'User not found' })
       return
@@ -78,7 +72,7 @@ GroupToDoListRoutes.put('/todolists/:id', async (req, res) => {
   try {
     const { id } = req.params
     const { title } = req.body
-    const dbName =  `${id}`
+    const dbName = `${id}`
 
     const dbs = await couch.listDatabases()
     if (!dbs.includes(dbName)) {
@@ -103,4 +97,3 @@ GroupToDoListRoutes.put('/todolists/:id', async (req, res) => {
     res.status(500).json({ error: 'Internal Server Error' })
   }
 })
-
