@@ -124,17 +124,16 @@ const Sidebar = () => {
       <Block>
         <h1>To-Do-Listen</h1>
         <div>
-          {todoListNames.map((todoListName) => (
-            <div>
-              <StyledLink
-                key={todoListName._id}
-                to={`/todoList/${todoListName._id}`}
-              >
-                To-Do-Liste {todoListName.title}
-              </StyledLink>
-            </div>
-          ))}
-        </div>
+  {todoListNames
+    .filter((todoListName) => todoListName.title !== undefined)
+    .map((todoListName) => (
+      <div key={todoListName._id}>
+        <StyledLink to={`/todoList/${todoListName._id}`}>
+          To-Do-Liste {todoListName.title}
+        </StyledLink>
+      </div>
+    ))}
+</div>
         {/* Hier können Sie Ihre To-Do-Liste einfügen */}
       </Block>
 
