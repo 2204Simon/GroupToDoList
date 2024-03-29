@@ -1,4 +1,3 @@
-import { remoteDB } from './../db'
 import PouchDB from 'pouchdb-browser'
 
     export function createTodo(todoDatenbankName: string, title: string, description: string, completed: boolean) {
