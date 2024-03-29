@@ -14,20 +14,20 @@ const SidebarWrapper = styled.div<{ isOpen: boolean }>`
   transition: 0.3s;
   overflow: hidden;
   margin-right: 40px;
-  background: #b3dee5;
+  color: #ecf0f1; // Ändern Sie die Textfarbe in #ecf0f1
+  background: #34495e; // Ändern Sie die Hintergrundfarbe in #34495e
   
-  box-shadow: #000000;
+  box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);
   backdrop-filter: blur(4px);
   -webkit-backdrop-filter: blur(4px);
   border-radius: 10px;
-  border: 1px solid rgba(200, 200, 200, 0.18); // Ändern Sie die Randfarbe in ein weicheres Grau
+  border: 1px solid rgba(200, 200, 200, 0.18);
   height: 95vh;
-  
 `
 
 const Block = styled.div`
   padding: 20px;
-  border-bottom: 3px solid #fae6b1; // Ändern Sie die Randfarbe in ein weicheres Grau
+  border-bottom: 1px solid #2c3e50; // Ändern Sie die Randfarbe in ein dunkleres Blau
 `
 
 const LogoutButton = styled.button`
@@ -35,30 +35,37 @@ const LogoutButton = styled.button`
   bottom: 0;
   width: 100%;
   padding: 20px;
-  background: #e21818; 
-  color: #333; // Ändern Sie die Textfarbe in ein dunkleres Grau
+  background: #c0392b; 
+  color: #ecf0f1; 
 `
+
 const LoggedInButton = styled.button`
   position: absolute;
   bottom: 0;
   width: 100%;
   padding: 20px;
-  background: #225d23; // Ändern Sie die Hintergrundfarbe in ein weicheres Grau
-  color: #333; // Ändern Sie die Textfarbe in ein dunkleres Grau
+  background: #27ae60; 
+  color: #ecf0f1; 
 `
 
 const CloseButton = styled.div`
   position: absolute;
   left: 10px;
   top: 10px;
-  color: #333; // Ändern Sie die Textfarbe in ein dunkleres Grau
+  color: #ecf0f1; 
 `
 
 const StyledLink = styled(Link)`
-  color: #333; // Ändern Sie die Textfarbe in ein dunkleres Grau
-  text-decoration: none; // Entfernt die Unterstreichung
+  color: #ecf0f1; 
+  text-decoration: none;
+  font-weight: bold; // Fügt Fettdruck hinzu
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); // Fügt Textschatten hinzu
+  padding: 5px; // Fügt Polsterung hinzu
+  background-color: rgba(0, 0, 0, 0.1); // Fügt eine Hintergrundfarbe hinzu
+  border-radius: 5px; // Rundet die Ecken ab
   &:hover {
-    color: #666; // Ändert die Farbe beim Überfahren mit der Maus
+    color: #bdc3c7; 
+    background-color: rgba(0, 0, 0, 0.2); // Ändert die Hintergrundfarbe beim Überfahren mit der Maus
   }
 `
 
