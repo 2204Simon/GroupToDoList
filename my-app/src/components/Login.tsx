@@ -8,7 +8,18 @@ import {
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import { AuthContext } from '../AuthContext'
+import styled from 'styled-components'
+import { Link } from 'react-router-dom';
 
+const BlurBackground = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  backdrop-filter: blur(5px);
+  z-index: 1;
+`;
 function Login() {
   const { isLoggedIn, setLoggedIn } = useContext(AuthContext);
   const [username, setUsername] = useState('')
@@ -48,8 +59,10 @@ function Login() {
   }
 
   return (
+    <>
+    <BlurBackground />
     
-    <LoginContainer>
+    <LoginContainer style={{ zIndex: 2 }}>
       <LoginCard>
         <h2>Login</h2>
         <LoginInput
@@ -65,8 +78,13 @@ function Login() {
           onChange={(e) => setPassword(e.target.value)}
         />
         <LoginButton onClick={handleLogin}>Login</LoginButton>
+        Passwort vergessen? <Link to="/register"><strong>Hier</strong> </Link>zur Neuregistrierung
+        
+
+
       </LoginCard>
     </LoginContainer>
+    </>
   )
 }
 

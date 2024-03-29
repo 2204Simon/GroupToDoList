@@ -7,8 +7,22 @@ import {
 } from './Login.style'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
+import styled from 'styled-components'
 
+const BlurBackground = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  backdrop-filter: blur(5px);
+  z-index: 1;
+`;
 function Register() {
+  const [isRegistering, setIsRegistering] = useState(false);
+  useEffect(() => {
+    setIsRegistering(true);
+  }, []);
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [email, setEmail] = useState('')
@@ -16,6 +30,7 @@ function Register() {
   const navigate = useNavigate()
 
   const handleRegister = async () => {
+    setIsRegistering(true);
     const response = await fetch('http://localhost:4001/api/users', {
       method: 'POST',
       headers: {
@@ -42,7 +57,9 @@ function Register() {
   }
 
   return (
-    <LoginContainer>
+    <>
+    {isRegistering && <BlurBackground />}
+    <LoginContainer style={{ zIndex: isRegistering ? 2 : 1 }}>
       <LoginCard>
         <h2>Registrieren</h2>
         <LoginInput
@@ -66,6 +83,7 @@ function Register() {
         <LoginButton onClick={handleRegister}>Registrieren</LoginButton>
       </LoginCard>
     </LoginContainer>
+    </>
   )
 }
 
