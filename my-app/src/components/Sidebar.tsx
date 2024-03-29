@@ -73,6 +73,7 @@ const StyledLink = styled(Link)`
 const testTodoIds = ['1', '2']
 
 const Sidebar = () => {
+  const { isLoggedIn, setLoggedIn } = useContext(AuthContext);
   const [cookies, setCookie] = useCookies(['database'])
   const navigate = useNavigate()
 
@@ -155,13 +156,16 @@ const Sidebar = () => {
         {/* Hier können Sie Ihre To-Do-Liste einfügen */}
       </Block>
 
-      <LogoutButton
-        onClick={() => {
-          /* Hier können Sie Ihre Ausloggen-Funktion einfügen */
-        }}
-      >
-        Ausloggen
-      </LogoutButton>
+      <Block>
+        <StyledLink to="/register">Registrieren</StyledLink>
+      </Block>
+      {isLoggedIn ? (
+        <LogoutButton onClick={() => {setLoggedIn(false);
+          toast.success('Erfolgreich ausgeloggt');
+        }}>Ausloggen</LogoutButton>
+      ) : (
+        <LoggedInButton onClick={() => navigate('/login')}>Einloggen</LoggedInButton>
+      )}
     </SidebarWrapper>
   )
 }
