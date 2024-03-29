@@ -60,8 +60,8 @@ const StyledLink = styled(Link)`
   color: #ecf0f1; 
   text-decoration: none;
   font-weight: bold; // Fügt Fettdruck hinzu
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); // Fügt Textschatten hinzu
-  padding: 5px; // Fügt Polsterung hinzu
+  
+  padding: 2px; // Fügt Polsterung hinzu
   background-color: rgba(0, 0, 0, 0.1); // Fügt eine Hintergrundfarbe hinzu
   border-radius: 5px; // Rundet die Ecken ab
   &:hover {
