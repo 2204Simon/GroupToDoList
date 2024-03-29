@@ -7,7 +7,7 @@ const secret = 'your-secret-key'
 
 // Function to generate a new token
 export function generateAccessToken(userId: string) {
-  return jwt.sign({ userId }, secret, { expiresIn: '8h' })
+  return jwt.sign({ userId }, secret)
 }
 
 // Middleware to validate token
