@@ -6,12 +6,23 @@ import {
   loadTodos,
   updateTodo,
 } from './todofunctions'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import { Todo } from '../types/types'
+import TodoList from './ToDoList'
 
 export default function SingleToDoList() {
   const { id } = useParams()
   const [title, setTitle] = useState('')
   const [caption, setCaption] = useState('')
+  const [todos, setTodos] = useState<Array<Todo>>([])
+  useEffect(() => {
+    loadTodos(id as string)
+      .then((todos) => {
+        console.log(todos)
+        setTodos(todos)
+      })
+      .catch(console.error)
+  }, [id])
   return (
     <div>
       {!id ? (
@@ -44,6 +55,7 @@ export default function SingleToDoList() {
             load LocalDatabases
           </button>{' '}
           <br />
+          <TodoList todos={todos} groupListId={id} />
           <button
             onClick={() =>
               deleteTodo('testtodo', 'fea10ebb-f17d-4fb6-b58e-07f1d641995c')

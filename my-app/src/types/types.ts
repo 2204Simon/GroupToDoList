@@ -4,6 +4,14 @@ export interface Todo {
   description: string
   completed: boolean
 }
+
+export interface TodoDocument
+  extends PouchDB.Core.ExistingDocument<PouchDB.Core.AllDocsMeta> {
+  title: string
+  description: string
+  completed: boolean
+}
+
 export type TodoListPouchListing = {
   dbName: string
   title: string
