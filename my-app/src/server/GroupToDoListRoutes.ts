@@ -40,6 +40,8 @@ GroupToDoListRoutes.post('/todolists', async (req, res) => {
 
 GroupToDoListRoutes.get('/todolists', async (req, res) => {
   try {
+    console.log(req.cookies.token)
+
     const userId = getUserIdFromToken(req.cookies.token)
     if (!userId) {
       res.status(404).json({ error: 'User not found' })

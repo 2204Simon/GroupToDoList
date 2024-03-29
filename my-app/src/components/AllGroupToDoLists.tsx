@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import {GroupTodoList} from '../types/types'
+import { GroupTodoList } from '../types/types'
 
 const AllGroupToDoLists: React.FC = () => {
   const [newTodoList, setNewTodoList] = useState({ title: '' })
@@ -11,13 +11,12 @@ const AllGroupToDoLists: React.FC = () => {
 
   const loadTodoLists = async () => {
     try {
-      const response = await fetch('http://localhost:4001/api/todolists',
-      {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        
-      },
+      const response = await fetch('http://localhost:4001/api/todolists', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include',
       })
 
       if (!response.ok) {
@@ -25,7 +24,7 @@ const AllGroupToDoLists: React.FC = () => {
         return
       }
       const data = await response.json()
-      //noch Bug bei data.map keine Funktion 
+      //noch Bug bei data.map keine Funktion
       const todoLists = data.map((todoList: { id: string; title: string }) => ({
         id: todoList.id,
         title: todoList.title,
