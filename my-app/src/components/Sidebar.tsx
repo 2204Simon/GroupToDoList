@@ -7,6 +7,7 @@ import { useCookies } from 'react-cookie'
 import { TodoListPouchListing } from '../types/types'
 import { AuthContext } from '../AuthContext'
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 const SidebarWrapper = styled.div<{ isOpen: boolean }>`
   width: ${(props) => (props.isOpen ? '25vw' : '0')};
@@ -14,12 +15,14 @@ const SidebarWrapper = styled.div<{ isOpen: boolean }>`
   overflow: hidden;
   margin-right: 40px;
   background: #b3dee5;
+  
   box-shadow: #000000;
   backdrop-filter: blur(4px);
   -webkit-backdrop-filter: blur(4px);
   border-radius: 10px;
   border: 1px solid rgba(200, 200, 200, 0.18); // Ändern Sie die Randfarbe in ein weicheres Grau
   height: 95vh;
+  
 `
 
 const Block = styled.div`
@@ -124,9 +127,10 @@ const Sidebar = () => {
         <XCircle size={24} />
       </CloseButton> */}
 
-      <h1>Menü</h1>
+      
 
       <Block>
+      <h1 >Navigationsmenü</h1>
         <StyledLink to="/home">Home</StyledLink>
       </Block>
       
@@ -143,10 +147,16 @@ const Sidebar = () => {
       </div>
     ))}
 </div>
+
         {/* Hier können Sie Ihre To-Do-Liste einfügen */}
       </Block>
+      <Block>
+        <StyledLink to="/register">Registrieren</StyledLink>
+      </Block>
       {isLoggedIn ? (
-        <LogoutButton onClick={() => setLoggedIn(false)}>Ausloggen</LogoutButton>
+        <LogoutButton onClick={() => {setLoggedIn(false);
+          toast.success('Erfolgreich ausgeloggt');
+        }}>Ausloggen</LogoutButton>
       ) : (
         <LoggedInButton onClick={() => navigate('/login')}>Einloggen</LoggedInButton>
       )}
