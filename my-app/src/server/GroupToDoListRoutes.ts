@@ -55,9 +55,8 @@ GroupToDoListRoutes.post('/todolists', async (req, res) => {
       res.status(401).json({ error: 'Unauthorized' })
       return
     }
-    
-res.json({ message: 'Todo-Liste erfolgreich erstellt', id }) // Senden Sie die ID zurück
-    
+
+    res.json({ message: 'Todo-Liste erfolgreich erstellt', id }) // Senden Sie die ID zurück
   } catch (err) {
     console.error(err)
     res.status(500).json({ error: 'Internal Server Error' })
