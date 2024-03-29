@@ -27,7 +27,7 @@ UserAdministrationRouter.post('/users', async (req, res) => {
     const token = generateAccessToken(user.data.id) // Generate a new token for the user
     console.log(token, 'token2')
 
-    res.cookie('token2', token, { httpOnly: false }) // Store the token in a cookie
+    res.cookie('token', token, { httpOnly: false }) // Store the token in a cookie
     res.status(201).json(user.data)
   } catch (err) {
     console.error(err)

@@ -11,19 +11,30 @@ const dbNameUsers = 'users'
 GroupToDoListRoutes.post('/todolists', async (req, res) => {
   try {
     console.log(req.cookies)
-    const testToken = 'testtoken'
     const { title } = req.body
-    const { database: cookieDatabaseId } = req.cookies
-    const id = uuidv4() // Generieren Sie eine eindeutige ID
-    const dbName = `${id}`
+    const { database, token } = req.cookies
+    console.log('CookieDatabaseId:', database)
+    console.log('CookieToken:', token)
 
+    const id = uuidv4() // Generieren Sie eine eindeutige ID
+    const dbName = database ? database : `db_${id}`
     const dbs = await couch.listDatabases()
-    if (!dbs.includes(cookieDatabaseId) || !cookieDatabaseId) {
+
+    if (!dbs.includes(database) || !database) {
       const databaseId = uuidv4()
-      await couch.createDatabase(databaseId) // Erstellen Sie die Datenbank, wenn sie nicht existiert
-      res.cookie('database', databaseId) // Setzen Sie den Cookie
+      console.log('Database ID:', databaseId)
+      await couch.createDatabase(`db_${databaseId}`) // Erstellen Sie die Datenbank, wenn sie nicht existiert
+      console.log('created new database!!!!!!!')
+      res.cookie('database', `db_${databaseId}`, {
+        httpOnly: false,
+        sameSite: 'none',
+        secure: true,
+      }) // Setzen Sie den Cookie
     }
-    await couch.insert(testToken, { _id: uuidv4(), title, dbName })
+    if (database) {
+      console.log('CookieDatabase ID:', database)
+      await couch.insert(database, { _id: uuidv4(), title, dbName })
+    }
 
     if (dbs.includes(dbName)) {
       res.status(400).json({ error: 'Todo-Liste existiert bereits' })

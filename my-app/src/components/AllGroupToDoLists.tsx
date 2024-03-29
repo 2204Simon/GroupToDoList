@@ -46,6 +46,7 @@ const AllGroupToDoLists: React.FC = () => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(newTodoList),
+        credentials: 'include',
       })
 
       if (response.ok) {
