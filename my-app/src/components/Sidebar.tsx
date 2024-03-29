@@ -1,6 +1,10 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import styled from 'styled-components'
+import { useEffect } from 'react'
+import PouchDB from 'pouchdb-browser'
+import { useCookies } from 'react-cookie'
+import { TodoListPouchListing } from '../types/types'
 
 const SidebarWrapper = styled.div<{ isOpen: boolean }>`
   width: ${(props) => (props.isOpen ? '25vw' : '0')};
@@ -48,6 +52,54 @@ const StyledLink = styled(Link)`
 const testTodoIds = ['1', '2']
 
 const Sidebar = () => {
+  const [cookies, setCookie] = useCookies(['database'])
+  const [todoListNames, setTodoListNames] = useState<
+    Array<TodoListPouchListing>
+  >([])
+  useEffect(() => {
+    const loadTodoListNames = async (
+      cookies: any,
+      setCookie: any,
+    ): Promise<Array<TodoListPouchListing>> => {
+      const remoteDB = new PouchDB(`http://localhost:5984/${cookies.database}`)
+      remoteDB.info().then((info) => {
+        console.log('info', info)
+      })
+      const localDB = new PouchDB(cookies.database)
+      localDB
+        .sync(remoteDB, {
+          live: true,
+          retry: true,
+        })
+        .then((sync) => {
+          console.log('sync', sync)
+        })
+        .catch((error) => {
+          console.log('error', error)
+        })
+
+      const response = await localDB.allDocs({
+        include_docs: true,
+      })
+      console.log('response', response)
+
+      const todoListNames = response.rows.map((row: any) => ({
+        dbName: row.doc.dbName,
+        title: row.doc.title,
+        _id: row.doc._id,
+      }))
+      return todoListNames
+    }
+
+    const fetchGroupNames = async () => {
+      const groupNames = await loadTodoListNames(cookies, setCookie)
+      setTodoListNames(groupNames)
+      console.log(groupNames, 'groupNames')
+    }
+
+    fetchGroupNames()
+  }, [cookies, setCookie])
+
   const [isOpen, setIsOpen] = useState(true)
   const toggleSidebar = () => {
     setIsOpen(!isOpen)
@@ -72,18 +124,20 @@ const Sidebar = () => {
       <Block>
         <h1>To-Do-Listen</h1>
         <div>
-          {testTodoIds.map((id) => (
+          {todoListNames.map((todoListName) => (
             <div>
-              <StyledLink key={id} to={`/todoList/${id}`}>
-                To-Do-Liste {id}
+              <StyledLink
+                key={todoListName._id}
+                to={`/todoList/${todoListName._id}`}
+              >
+                To-Do-Liste {todoListName.title}
               </StyledLink>
             </div>
           ))}
         </div>
         {/* Hier können Sie Ihre To-Do-Liste einfügen */}
       </Block>
-      
-      
+
       <LogoutButton
         onClick={() => {
           /* Hier können Sie Ihre Ausloggen-Funktion einfügen */
