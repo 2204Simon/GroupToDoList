@@ -51,6 +51,21 @@ GroupToDoListRoutes.post('/todolists', async (req, res) => {
     if (database) {
       console.log('CookieDatabase ID:', database)
       await couch.createDatabase(`${groupListId}`)
+      await couch.request({
+        db: groupListId,
+        method: 'put',
+        doc: '_security',
+        body: {
+          admins: {
+            names: [],
+            roles: [],
+          },
+          members: {
+            names: [],
+            roles: [],
+          },
+        },
+      })
       await couch.insert(database, { _id: groupListId, title, dbName })
     }
 
