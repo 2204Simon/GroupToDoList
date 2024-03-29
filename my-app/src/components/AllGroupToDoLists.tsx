@@ -11,7 +11,19 @@ const AllGroupToDoLists: React.FC = () => {
 
   const loadTodoLists = async () => {
     try {
-      const response = await fetch('http://localhost:4001/todolists')
+      const response = await fetch('http://localhost:4001/todolists',
+      {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        
+      },
+      })
+
+      if (!response.ok) {
+        console.error(`Server responded with status code ${response.status}`)
+        return
+      }
       const data = await response.json()
       //noch Bug bei data.map keine Funktion 
       const todoLists = data.map((todoList: { id: string; title: string }) => ({
