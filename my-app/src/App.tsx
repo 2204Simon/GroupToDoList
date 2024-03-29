@@ -1,5 +1,6 @@
 import React from 'react'
 import AllGroupToDoLists from './components/AllGroupToDoLists'
+import './App.css'
 
 const App: React.FC = () => {
   return (
