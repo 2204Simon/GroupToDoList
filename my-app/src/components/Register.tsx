@@ -6,6 +6,7 @@ import {
   LoginInput,
 } from './Login.style'
 import { useNavigate } from 'react-router-dom'
+import { toast } from 'react-toastify'
 
 function Register() {
   const [username, setUsername] = useState('')
@@ -31,8 +32,11 @@ function Register() {
     if (response.ok) {
       const data = await response.json()
       navigate('/login')
+      //toastify success
+      toast.success("Registrierung erfolgreich")
       console.log('Registration successful', data)
     } else {
+      toast.error("Registrierung fehlgeschlagen")
       console.error('Registration failed')
     }
   }
@@ -40,7 +44,7 @@ function Register() {
   return (
     <LoginContainer>
       <LoginCard>
-        <h2>Register</h2>
+        <h2>Registrieren</h2>
         <LoginInput
           type="text"
           placeholder="Username"
@@ -59,7 +63,7 @@ function Register() {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
-        <LoginButton onClick={handleRegister}>Register</LoginButton>
+        <LoginButton onClick={handleRegister}>Registrieren</LoginButton>
       </LoginCard>
     </LoginContainer>
   )
