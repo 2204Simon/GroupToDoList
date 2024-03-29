@@ -6,10 +6,12 @@ import {
   loadTodos,
   updateTodo,
 } from './todofunctions'
+import { useState } from 'react'
 
 export default function SingleToDoList() {
   const { id } = useParams()
-
+  const [title, setTitle] = useState('')
+  const [caption, setCaption] = useState('')
   return (
     <div>
       {!id ? (
@@ -17,7 +19,19 @@ export default function SingleToDoList() {
       ) : (
         <>
           <div>SingleToDoList Nummer {id}</div>
-          <button onClick={() => createTodo(id, 'Test', 'Test', false)}>
+          <input
+            type="text"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            placeholder="Title"
+          />
+          <input
+            type="text"
+            value={caption}
+            onChange={(e) => setCaption(e.target.value)}
+            placeholder="Caption"
+          />
+          <button onClick={() => createTodo(id, title, caption, false)}>
             create LocalDatabases
           </button>{' '}
           <br />
