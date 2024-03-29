@@ -6,8 +6,8 @@ import PouchDB from 'pouchdb-browser'
 import { useCookies } from 'react-cookie'
 import { TodoListPouchListing } from '../types/types'
 import { AuthContext } from '../AuthContext'
-import { useNavigate } from 'react-router-dom';
-import { toast } from 'react-toastify';
+import { useNavigate } from 'react-router-dom'
+import { toast } from 'react-toastify'
 
 const SidebarWrapper = styled.div<{ isOpen: boolean }>`
   width: ${(props) => (props.isOpen ? '25vw' : '0')};
@@ -16,7 +16,6 @@ const SidebarWrapper = styled.div<{ isOpen: boolean }>`
   margin-right: 40px;
   color: #ecf0f1; // Ändern Sie die Textfarbe in #ecf0f1
   background: #34495e; // Ändern Sie die Hintergrundfarbe in #34495e
-  
   box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);
   backdrop-filter: blur(4px);
   -webkit-backdrop-filter: blur(4px);
@@ -37,6 +36,8 @@ const LogoutButton = styled.button`
   padding: 20px;
   background: #c0392b; 
   color: #ecf0f1; 
+
+
 `
 
 const LoggedInButton = styled.button`
@@ -72,10 +73,8 @@ const StyledLink = styled(Link)`
 const testTodoIds = ['1', '2']
 
 const Sidebar = () => {
-  const { isLoggedIn, setLoggedIn } = useContext(AuthContext);
   const [cookies, setCookie] = useCookies(['database'])
-  const navigate = useNavigate();
-
+  const navigate = useNavigate()
 
   const [todoListNames, setTodoListNames] = useState<
     Array<TodoListPouchListing>
@@ -134,40 +133,35 @@ const Sidebar = () => {
         <XCircle size={24} />
       </CloseButton> */}
 
-      
-
       <Block>
-      <h1 >Navigationsmenü</h1>
+        <h1>Navigationsmenü</h1>
         <StyledLink to="/home">Home</StyledLink>
       </Block>
-      
+
       <Block>
         <h1>To-Do-Listen</h1>
         <div>
-  {todoListNames
-    .filter((todoListName) => todoListName.title !== undefined)
-    .map((todoListName) => (
-      <div key={todoListName._id}>
-        <StyledLink to={`/todoList/${todoListName._id}`}>
-          To-Do-Liste {todoListName.title}
-        </StyledLink>
-      </div>
-    ))}
-</div>
+          {todoListNames
+            .filter((todoListName) => todoListName.title !== undefined)
+            .map((todoListName) => (
+              <div key={todoListName._id}>
+                <StyledLink to={`/todoList/${todoListName._id}`}>
+                  To-Do-Liste {todoListName.title}
+                </StyledLink>
+              </div>
+            ))}
+        </div>
 
         {/* Hier können Sie Ihre To-Do-Liste einfügen */}
       </Block>
-      <Block>
-        <StyledLink to="/register">Registrieren</StyledLink>
-      </Block>
-      {isLoggedIn ? (
-        <LogoutButton onClick={() => {setLoggedIn(false);
-          toast.success('Erfolgreich ausgeloggt');
-        }}>Ausloggen</LogoutButton>
-      ) : (
-        <LoggedInButton onClick={() => navigate('/login')}>Einloggen</LoggedInButton>
-      )}
-      
+
+      <LogoutButton
+        onClick={() => {
+          /* Hier können Sie Ihre Ausloggen-Funktion einfügen */
+        }}
+      >
+        Ausloggen
+      </LogoutButton>
     </SidebarWrapper>
   )
 }
