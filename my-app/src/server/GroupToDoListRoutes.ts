@@ -51,13 +51,13 @@ GroupToDoListRoutes.post('/todolists', async (req, res) => {
       await couch.insert(database, { _id: uuidv4(), title, dbName })
     }
 
-    if (dbs.includes(dbName)) {
-      res.status(400).json({ error: 'Todo-Liste existiert bereits' })
-    } else {
-      await couch.createDatabase(dbName)
-      await couch.insert(dbName, { id, title })
-      res.json({ message: 'Todo-Liste erfolgreich erstellt', id }) // Senden Sie die ID zurück
+    if (!token) {
+      res.status(401).json({ error: 'Unauthorized' })
+      return
     }
+    
+res.json({ message: 'Todo-Liste erfolgreich erstellt', id }) // Senden Sie die ID zurück
+    
   } catch (err) {
     console.error(err)
     res.status(500).json({ error: 'Internal Server Error' })
