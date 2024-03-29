@@ -8,6 +8,7 @@ import { TodoListPouchListing } from '../types/types'
 import { AuthContext } from '../AuthContext'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
+import {Pen } from 'phosphor-react'
 
 const SidebarWrapper = styled.div<{ isOpen: boolean }>`
   width: ${(props) => (props.isOpen ? '25vw' : '0')};
@@ -21,6 +22,7 @@ const SidebarWrapper = styled.div<{ isOpen: boolean }>`
   -webkit-backdrop-filter: blur(4px);
   border-radius: 10px;
   height: 95vh;
+  min-width: 150px;
 `
 
 const Block = styled.div`
@@ -36,6 +38,8 @@ const LogoutButton = styled.button`
   background: #c0392b; 
   color: #ecf0f1; 
   height: 60px;
+
+  
   
 
 
@@ -130,6 +134,10 @@ const Sidebar = () => {
   const toggleSidebar = () => {
     setIsOpen(!isOpen)
   }
+  function editTitle(_id: string): void {
+    throw new Error('Function not implemented.') // TODO: anbinden!!
+  }
+
   return (
     <SidebarWrapper isOpen={isOpen}>
       {/* <CloseButton onClick={toggleSidebar}>
@@ -142,21 +150,24 @@ const Sidebar = () => {
       </Block>
 
       <Block>
-        <h1>To-Do-Listen</h1>
-        <div>
-          {todoListNames
-            .filter((todoListName) => todoListName.title !== undefined)
-            .map((todoListName) => (
-              <div key={todoListName._id}>
-                <StyledLink to={`/todoList/${todoListName._id}`}>
-                  To-Do-Liste {todoListName.title}
-                </StyledLink>
-              </div>
-            ))}
+  <h1>To-Do-Listen</h1>
+  <div>
+    {todoListNames
+      .filter((todoListName) => todoListName.title !== undefined)
+      .map((todoListName) => (
+        <div key={todoListName._id} style={{ display: 'flex', justifyContent: 'space-between' }}>
+          <StyledLink to={`/todoList/${todoListName._id}`}>
+             {todoListName.title}
+          </StyledLink>
+          <button onClick={() => editTitle(todoListName._id)} style={{width: 'auto'}}>
+            <Pen size={30} />
+          </button>
         </div>
+      ))}
+  </div>
 
-        {/* Hier können Sie Ihre To-Do-Liste einfügen */}
-      </Block>
+  {/* Hier können Sie Ihre To-Do-Liste einfügen */}
+</Block>
 
       <Block>
         <StyledLink to="/register">Registrieren</StyledLink>
