@@ -16,11 +16,10 @@ const SidebarWrapper = styled.div<{ isOpen: boolean }>`
   margin-right: 40px;
   color: #ecf0f1; // Ändern Sie die Textfarbe in #ecf0f1
   background: #34495e; // Ändern Sie die Hintergrundfarbe in #34495e
-  box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);
+  
   backdrop-filter: blur(4px);
   -webkit-backdrop-filter: blur(4px);
   border-radius: 10px;
-  border: 1px solid rgba(200, 200, 200, 0.18);
   height: 95vh;
 `
 
@@ -36,7 +35,7 @@ const LogoutButton = styled.button`
   padding: 20px;
   background: #c0392b; 
   color: #ecf0f1; 
-  height: 50px;
+  height: 60px;
   
 
 
