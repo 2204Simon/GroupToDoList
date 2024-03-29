@@ -1,10 +1,12 @@
-import { useState } from 'react'
+import { useState, useContext } from 'react'
 import { Link } from 'react-router-dom'
 import styled from 'styled-components'
 import { useEffect } from 'react'
 import PouchDB from 'pouchdb-browser'
 import { useCookies } from 'react-cookie'
 import { TodoListPouchListing } from '../types/types'
+import { AuthContext } from '../AuthContext'
+import { useNavigate } from 'react-router-dom';
 
 const SidebarWrapper = styled.div<{ isOpen: boolean }>`
   width: ${(props) => (props.isOpen ? '25vw' : '0')};
@@ -30,7 +32,15 @@ const LogoutButton = styled.button`
   bottom: 0;
   width: 100%;
   padding: 20px;
-  background: #000000; // Ändern Sie die Hintergrundfarbe in ein weicheres Grau
+  background: #e21818; 
+  color: #333; // Ändern Sie die Textfarbe in ein dunkleres Grau
+`
+const LoggedInButton = styled.button`
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  padding: 20px;
+  background: #225d23; // Ändern Sie die Hintergrundfarbe in ein weicheres Grau
   color: #333; // Ändern Sie die Textfarbe in ein dunkleres Grau
 `
 
@@ -52,7 +62,11 @@ const StyledLink = styled(Link)`
 const testTodoIds = ['1', '2']
 
 const Sidebar = () => {
+  const { isLoggedIn, setLoggedIn } = useContext(AuthContext);
   const [cookies, setCookie] = useCookies(['database'])
+  const navigate = useNavigate();
+
+
   const [todoListNames, setTodoListNames] = useState<
     Array<TodoListPouchListing>
   >([])
@@ -115,12 +129,7 @@ const Sidebar = () => {
       <Block>
         <StyledLink to="/home">Home</StyledLink>
       </Block>
-      <Block>
-        <StyledLink to="/Login">Login</StyledLink>
-      </Block>
-      <Block>
-        <StyledLink to="/Register">Registrieren</StyledLink>
-      </Block>
+      
       <Block>
         <h1>To-Do-Listen</h1>
         <div>
@@ -136,14 +145,12 @@ const Sidebar = () => {
 </div>
         {/* Hier können Sie Ihre To-Do-Liste einfügen */}
       </Block>
-
-      <LogoutButton
-        onClick={() => {
-          /* Hier können Sie Ihre Ausloggen-Funktion einfügen */
-        }}
-      >
-        Ausloggen
-      </LogoutButton>
+      {isLoggedIn ? (
+        <LogoutButton onClick={() => setLoggedIn(false)}>Ausloggen</LogoutButton>
+      ) : (
+        <LoggedInButton onClick={() => navigate('/login')}>Einloggen</LoggedInButton>
+      )}
+      
     </SidebarWrapper>
   )
 }

@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useContext } from 'react'
 import {
   LoginButton,
   LoginCard,
@@ -6,8 +6,11 @@ import {
   LoginInput,
 } from './Login.style'
 import { useNavigate } from 'react-router-dom'
+import { toast } from 'react-toastify'
+import { AuthContext } from '../AuthContext'
 
 function Login() {
+  const { isLoggedIn, setLoggedIn } = useContext(AuthContext);
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const navigate = useNavigate()
@@ -23,12 +26,15 @@ function Login() {
       })
 
       if (!response.ok) {
+        toast.error('Login fehlgeschlagen')
         throw new Error('Login failed')
       }
 
       const data = await response.json()
 
       if (data.message === 'Login successful') {
+        setLoggedIn(true);
+        toast.success('Login erfolgreich')
         console.log('Login successful')
         navigate('/home')
         // Handle successful login here
@@ -48,13 +54,13 @@ function Login() {
         <h2>Login</h2>
         <LoginInput
           type="text"
-          placeholder="Username"
+          placeholder="Benutzername"
           value={username}
           onChange={(e) => setUsername(e.target.value)}
         />
         <LoginInput
           type="password"
-          placeholder="Password"
+          placeholder="Passwort"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
@@ -65,3 +71,4 @@ function Login() {
 }
 
 export default Login
+
