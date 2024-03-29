@@ -47,7 +47,7 @@ function Register() {
         <h2>Registrieren</h2>
         <LoginInput
           type="text"
-          placeholder="Username"
+          placeholder="Benutzername"
           value={username}
           onChange={(e) => setUsername(e.target.value)}
         />
@@ -59,7 +59,7 @@ function Register() {
         />
         <LoginInput
           type="password"
-          placeholder="Password"
+          placeholder="Passwort"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />

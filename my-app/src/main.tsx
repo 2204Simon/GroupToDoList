@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import ReactDOM from 'react-dom/client'
 import App from './App.tsx'
 import './index.css'
@@ -11,6 +11,7 @@ import SingleToDoList from './components/SingleToDoList.tsx'
 import {useCookies} from 'react-cookie'
 import { ToastContainer } from 'react-toastify'
 import "react-toastify/dist/ReactToastify.css";
+import { AuthContext } from './AuthContext';
 
 const Layout = styled.div`
   display: flex;
@@ -30,11 +31,12 @@ function CheckToken() {
 }
 
 function Main() {
+  const [isLoggedIn, setLoggedIn] = useState(false);
   return (
     <React.StrictMode>
       <Router>
         <CheckToken />
-        
+        <AuthContext.Provider value={{ isLoggedIn, setLoggedIn }}>
         <Layout>
           <Sidebar />
           
@@ -47,7 +49,7 @@ function Main() {
           </Routes>
           <ToastContainer />
         </Layout>
-        
+        </AuthContext.Provider>
       </Router>
     </React.StrictMode>
   )
