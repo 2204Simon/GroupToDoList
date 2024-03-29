@@ -36,6 +36,8 @@ const LogoutButton = styled.button`
   padding: 20px;
   background: #c0392b; 
   color: #ecf0f1; 
+  height: 50px;
+  
 
 
 `
@@ -47,6 +49,7 @@ const LoggedInButton = styled.button`
   padding: 20px;
   background: #27ae60; 
   color: #ecf0f1; 
+  height: 60px;
 `
 
 const CloseButton = styled.div`

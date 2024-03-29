@@ -38,8 +38,9 @@ export const LoginButton = styled.button`
   cursor: pointer;
   box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.1);
   transition: all 0.3s ease;
+  height: 40px;
 
   &:hover {
-    background-color: #0056b3;
+    background-color: #2c3e50;
   }
 `
