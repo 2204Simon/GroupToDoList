@@ -14,7 +14,7 @@ const GroupToDoList: React.FC<ToDoListsProps> = ({
   }, [])
   const loadTodos = async () => {
     try {
-      const response = await fetch('http://localhost:4001/todos')
+      const response = await fetch('http://localhost:4001/api/todos')
       const data = await response.json()
       setTodos(data)
     } catch (error) {
@@ -25,7 +25,7 @@ const GroupToDoList: React.FC<ToDoListsProps> = ({
     event.preventDefault()
 
     try {
-      await fetch('http://localhost:4001/todos', {
+      await fetch('http://localhost:4001/api/todos', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -42,7 +42,7 @@ const GroupToDoList: React.FC<ToDoListsProps> = ({
   }
   const deleteTodo = async (id: string) => {
     try {
-      await fetch(`http://localhost:4001/todos/${id}`, {
+      await fetch(`http://localhost:4001/api/todos/${id}`, {
         method: 'DELETE',
       })
 
@@ -54,7 +54,7 @@ const GroupToDoList: React.FC<ToDoListsProps> = ({
 
   const editTodo = async (id: string, updatedTodo: Todo) => {
     try {
-      await fetch(`http://localhost:4001/todos/${id}`, {
+      await fetch(`http://localhost:4001/api/todos/${id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -70,7 +70,7 @@ const GroupToDoList: React.FC<ToDoListsProps> = ({
 
   const completeTodo = async (id: string, isCompleted: boolean) => {
     try {
-      await fetch(`http://localhost:4001/todos/${id}`, {
+      await fetch(`http://localhost:4001/api/todos/${id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

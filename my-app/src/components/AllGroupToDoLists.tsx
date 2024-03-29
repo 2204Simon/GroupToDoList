@@ -11,7 +11,7 @@ const AllGroupToDoLists: React.FC = () => {
 
   const loadTodoLists = async () => {
     try {
-      const response = await fetch('http://localhost:4001/todolists',
+      const response = await fetch('http://localhost:4001/api/todolists',
       {
       method: 'GET',
       headers: {
@@ -41,7 +41,7 @@ const AllGroupToDoLists: React.FC = () => {
     event.preventDefault()
 
     try {
-      const response = await fetch('http://localhost:4001/todolists', {
+      const response = await fetch('http://localhost:4001/api/todolists', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
