@@ -12,14 +12,23 @@ export default function SingleToDoList() {
   const [title, setTitle] = useState('')
   const [caption, setCaption] = useState('')
   const [todos, setTodos] = useState<Array<Todo>>([])
+  
   useEffect(() => {
     loadTodos(id as string)
       .then((todos) => {
-        console.log(todos)
         setTodos(todos)
       })
       .catch(console.error)
   }, [id])
+
+  useEffect(() => {
+    loadTodos(id as string)
+      .then((todos) => {
+        setTodos(todos)
+      })
+      .catch(console.error)
+  }, [todos])
+
   return (
     <div>
       {!id ? (
@@ -39,14 +48,18 @@ export default function SingleToDoList() {
             onChange={(e) => setCaption(e.target.value)}
             placeholder="Caption"
           />
-          <button onClick={() => createTodo(id, title, caption, false)}>
+          <button
+            onClick={async () => {
+              const newTodo = await createTodo(id, title, caption, false)
+              setTodos(prevTodos => [...prevTodos, newTodo])
+            }}
+          >
             create Todo
           </button>{' '}
           <br />
           <button
             onClick={async () => {
               const todos = await loadTodos(id as string)
-              console.log(todos)
             }}
           >
             load Todos
