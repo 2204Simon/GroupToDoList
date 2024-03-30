@@ -46,11 +46,15 @@ GroupToDoListRoutes.post('/todolists', async (req, res) => {
 
       const { data, headers, status } = await couch.get('users', user._id)
 
-      const updatedUser = {
-        ...data,
-        databaseId: dbName,
-      }
-      await couch.update('users', user._id, updatedUser)
+
+console.log(user._id, data._rev);
+const updatedUser = {
+  _id: user._id,
+  _rev: data._rev,
+  ...data,
+  databaseId: dbName,
+}
+await couch.insert('users', updatedUser)
       res.cookie('database', `db_${databaseId}`, {
         httpOnly: false,
         sameSite: 'none',

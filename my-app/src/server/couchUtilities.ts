@@ -49,16 +49,37 @@ export async function findUserByToken(token: string) {
   console.log(userId, 'userId')
   console.log('Tokentoken', userId.userId)
 
-  const { data, headers, status } = await couch.get('users', userId.userId)
-
-  console.log(data, headers, status)
-  return data
+  try {
+    const query = {
+      selector: {
+        userId: { $eq: userId.userId },
+      }
+    }
+    const { data: docs } = await couch.mango('users', query, {})
+    if (docs.docs.length > 0) {
+      return docs.docs[0]
+    } else {
+      console.error(`User with id ${userId.userId} does not exist.`);
+      return null;
+    }
+  } catch (error: any) {
+    console.error(error);
+    console.error(error.body);
+    console.error(error.stack);
+    return null;
+  }
 }
 
 export async function findUserByEmail(email: string) {
   const selector = {
     email: { $eq: email },
   }
-  const user = await couch.get('users', selector)
-  return user // gibt den ersten gefundenen Benutzer zurück
+
+  try {
+    const user = await couch.get('users', selector)
+    return user // gibt den ersten gefundenen Benutzer zurück
+  } catch (error) {
+    console.error(`User with email ${email} does not exist.`);
+    return null;
+  }
 }
