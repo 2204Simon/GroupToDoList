@@ -174,7 +174,12 @@ const Sidebar = () => {
       </Block>
       {isLoggedIn ? (
         <LogoutButton onClick={() => {setLoggedIn(false);
-          toast.success('Erfolgreich ausgeloggt');
+          toast.success('Erfolgreich ausgeloggt', {
+            autoClose: 2000
+        });
+          // token löschen
+          localStorage.removeItem('token');
+          navigate('/login');
         }}>Ausloggen</LogoutButton>
       ) : (
         <LoggedInButton onClick={() => navigate('/login')}>Einloggen</LoggedInButton>

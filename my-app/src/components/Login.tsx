@@ -37,7 +37,9 @@ function Login() {
       })
 
       if (!response.ok) {
-        toast.error('Login fehlgeschlagen')
+        toast.error('Login fehlgeschlagen', {
+          autoClose: 2000
+      });
         throw new Error('Login failed')
       }
 
@@ -45,7 +47,9 @@ function Login() {
 
       if (data.message === 'Login successful') {
         setLoggedIn(true);
-        toast.success('Login erfolgreich')
+        toast.success('Login erfolgreich', {
+          autoClose: 2000
+      });
         console.log('Login successful')
         navigate('/home')
         // Handle successful login here

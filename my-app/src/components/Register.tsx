@@ -81,6 +81,16 @@ function Register() {
           onChange={(e) => setPassword(e.target.value)}
         />
         <LoginButton onClick={handleRegister}>Registrieren</LoginButton>
+        <p>
+          Bereits registriert?{' '}
+          <span
+            style={{  cursor: 'pointer' }}
+            onClick={() => navigate('/login')}
+          >
+            <strong>Hier</strong> einloggen
+          </span>
+          
+        </p>
       </LoginCard>
     </LoginContainer>
     </>
