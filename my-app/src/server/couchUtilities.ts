@@ -52,3 +52,11 @@ export async function findUserByToken(token: string) {
   console.log(data, headers, status)
   return data
 }
+
+export async function findUserByEmail(email: string) {
+  const selector = {
+    email: { $eq: email },
+  }
+  const user = await couch.find('users', selector)
+  return user // gibt den ersten gefundenen Benutzer zurück
+}

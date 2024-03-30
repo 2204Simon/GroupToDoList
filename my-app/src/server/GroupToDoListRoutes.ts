@@ -1,9 +1,14 @@
+import { GroupTodoList } from './../types/types'
 import express from 'express'
 import { couch } from './server.ts' // Importieren Sie die CouchDB-Instanz aus Ihrer Hauptserverdatei
 import { v4 as uuidv4 } from 'uuid'
 import { validate as isUuid } from 'uuid'
 import { getUserIdFromToken } from './jwtMiddleware.ts'
-import { findUserByToken, publicDocumentsCouchDB } from './couchUtilities.ts'
+import {
+  findUserByEmail,
+  findUserByToken,
+  publicDocumentsCouchDB,
+} from './couchUtilities.ts'
 
 export const GroupToDoListRoutes = express.Router()
 const dbNameUsers = 'users'
@@ -18,7 +23,6 @@ GroupToDoListRoutes.post('/todolists', async (req, res) => {
     const dbName = database ? database : `db_${id}`
     const dbs = await couch.listDatabases()
     const groupListId = `gtd_${uuidv4()}`
-    console.log('GroupListId:', groupListId)
 
     if (!dbs.includes(database) || !database) {
       const databaseId = uuidv4()
@@ -39,8 +43,14 @@ GroupToDoListRoutes.post('/todolists', async (req, res) => {
         member,
         dbGroupTodoName,
       })
-      console.log('created new database!!!!!!!')
 
+      const { data, headers, status } = await couch.get('users', user._id)
+
+      const updatedUser = {
+        ...data,
+        databaseId: dbName,
+      }
+      await couch.update('users', user._id, updatedUser)
       res.cookie('database', `db_${databaseId}`, {
         httpOnly: false,
         sameSite: 'none',
@@ -49,13 +59,10 @@ GroupToDoListRoutes.post('/todolists', async (req, res) => {
     }
 
     if (database) {
-      console.log('CookieDatabase ID:', database)
       const dbName = `${groupListId}`
       await couch.createDatabase(dbName)
-
       const member = [{ email: user.email, role: 'admin' }]
       await publicDocumentsCouchDB(dbName)
-
       await couch.insert(database, {
         _id: groupListId,
         title,
@@ -107,6 +114,48 @@ GroupToDoListRoutes.post('/todolists', async (req, res) => {
 //     res.status(500).json({ error: 'Internal Server Error' })
 //   }
 // })
+
+GroupToDoListRoutes.post('/inviteTodoLists', async (req, res) => {
+  try {
+    const { email, groupListId, title } = req.body
+    console.log(email, groupListId)
+    const { data, header, status } = await findUserByEmail(email)
+    if (status === 404) {
+      res.status(404).json({ error: 'User not found' })
+      return
+    }
+    const groupList = await couch.find(data.databaseId, groupListId)
+    const singlemember = { email: data.email, role: 'member' }
+    groupList.data.member.push(singlemember)
+
+    // Save the updated group list back to the database
+    await couch.update(data.databaseId, groupListId, groupList)
+  } catch (err) {
+    console.error(err)
+    res.status(500).json({ error: 'Internal Server Error' })
+  }
+})
+
+GroupToDoListRoutes.put('/inviteTodoLists', async (req, res) => {
+  try {
+    const { email, groupListId, title } = req.body
+    console.log(email, groupListId)
+    const { data, header, status } = await findUserByEmail(email)
+    if (status === 404) {
+      res.status(404).json({ error: 'User not found' })
+      return
+    }
+    const groupList = await couch.find(data.databaseId, groupListId)
+    const singlemember = { email: data.email, role: 'member' }
+    groupList.data.member.push(singlemember)
+
+    // Save the updated group list back to the database
+    await couch.update(data.databaseId, groupListId, groupList)
+  } catch (err) {
+    console.error(err)
+    res.status(500).json({ error: 'Internal Server Error' })
+  }
+})
 
 GroupToDoListRoutes.put('/todolists/:id', async (req, res) => {
   try {
