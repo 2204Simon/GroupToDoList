@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { Todo, TodoListItemProps } from '../types/types'
-import { FaCheck, FaTimes,  } from 'react-icons/fa'; 
-import { Pen, FloppyDisk, Trash} from 'phosphor-react';
+import { FaCheck, FaTimes } from 'react-icons/fa'; 
+import { Pen, FloppyDisk, Trash } from 'phosphor-react';
 
 interface TodoListItemActions {
   onDelete: (id: string) => void,
@@ -40,24 +40,34 @@ const TodoListItem: React.FC<TodoListItemProps & TodoListItemActions> = ({
   }
 
   return (
-    <div>
-      {isEditing ? (
-        <>
-          <input type="text" name="title" value={updatedTodo.title} onChange={handleChange} />
-          <input type="text" name="description" value={updatedTodo.description} onChange={handleChange} />
-        </>
-      ) : (
-        <>
-          <strong>{todo.title}</strong>: {todo.description}{' '}
-        </>
-      )}
-      <button onClick={handleDelete}><Trash size={30}/></button>
-      <button onClick={handleEdit}>{isEditing ? 
-      <FloppyDisk size={30}/>
-      : <Pen size={30}/>}</button>
-      <button onClick={handleToggle}> 
-        {isCompleted ? <FaCheck size={30} /> : <FaTimes size={30} />} 
-      </button>
+    <div style={{display: 'flex', alignItems: 'center', justifyContent: 'space-between', color: isCompleted ? 'gray' : 'black'}}>
+      <div style={{ textDecoration: isCompleted ? 'line-through' : 'none' }}>
+        {isEditing ? (
+          <>
+            <input type="text" name="title" value={updatedTodo.title} onChange={handleChange} />
+            <input type="text" name="description" value={updatedTodo.description} onChange={handleChange} />
+          </>
+        ) : (
+          <>
+            <strong>{todo.title}</strong>: {todo.description}{' '}
+          </>
+        )}
+      </div>
+      <div style={{ display: 'flex', justifyContent: 'space-between', width: '30%', minWidth: '200px' }}>
+        {!isEditing && (
+          <button style={{width: 'auto'}} onClick={handleToggle}> 
+            {isCompleted ? <FaCheck size={30} /> : <FaTimes size={30} />} 
+          </button>
+        )}
+        <div style={{ display: 'flex' }}>
+          <button style={{width: 'auto', marginLeft: '10px'}} onClick={handleEdit}>
+            {isEditing ? <FloppyDisk size={30}/> : <Pen size={30}/>}
+          </button>
+          {!isEditing && (
+            <button style={{width: 'auto', marginLeft: '10px'}} onClick={handleDelete}><Trash size={30}/></button>
+          )}
+        </div>
+      </div>
     </div>
   )
 }
