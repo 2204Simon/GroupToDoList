@@ -1,3 +1,6 @@
+import { getUserIdFromToken } from './jwtMiddleware.ts'
+import { couch } from './server.ts'
+
 export function checkAndCreateDatabases(couch: any, dbNames: string[]) {
   couch.listDatabases().then((dbs: string[]) => {
     dbNames.forEach((dbName) => {
@@ -39,4 +42,13 @@ export async function publicDocumentsCouchDB(dbName: string) {
       },
     }),
   })
+}
+
+export async function findUserByToken(token: string) {
+  const userId: any = getUserIdFromToken(token)
+  console.log(userId, 'userId')
+  console.log('Tokentoken', userId.userId)
+  const { data, headers, status } = await couch.get('users', userId.userId)
+  console.log(data, headers, status)
+  return data
 }

@@ -8,7 +8,6 @@ import { checkAndCreateDatabases } from './couchUtilities.ts'
 import { TodoAdministration } from './todoAdministration.ts'
 import { authenticateJWT, getUserIdFromToken } from './jwtMiddleware.ts'
 import cookieParser from 'cookie-parser'
-import { TodoDatabaseCreation } from './groupTodoLists.tsx'
 import { TodoRoutes } from './TodoRoutes.ts'
 import { GroupToDoListRoutes } from './GroupToDoListRoutes.ts'
 
@@ -44,7 +43,6 @@ app.use(
   '/api/',
   UserAdministrationRouter,
   TodoAdministration,
-  TodoDatabaseCreation,
   TodoRoutes,
   GroupToDoListRoutes,
 )

@@ -8,7 +8,7 @@ import { TodoListPouchListing } from '../types/types'
 import { AuthContext } from '../AuthContext'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
-import {Pen } from 'phosphor-react'
+import { Pen } from 'phosphor-react'
 
 const SidebarWrapper = styled.div<{ isOpen: boolean }>`
   width: ${(props) => (props.isOpen ? '25vw' : '0')};
@@ -17,7 +17,7 @@ const SidebarWrapper = styled.div<{ isOpen: boolean }>`
   margin-right: 40px;
   color: #ecf0f1; // Ändern Sie die Textfarbe in #ecf0f1
   background: #34495e; // Ändern Sie die Hintergrundfarbe in #34495e
-  
+
   backdrop-filter: blur(4px);
   -webkit-backdrop-filter: blur(4px);
   border-radius: 10px;
@@ -35,14 +35,9 @@ const LogoutButton = styled.button`
   bottom: 0;
   width: 100%;
   padding: 20px;
-  background: #c0392b; 
-  color: #ecf0f1; 
+  background: #c0392b;
+  color: #ecf0f1;
   height: 60px;
-
-  
-  
-
-
 `
 
 const LoggedInButton = styled.button`
@@ -50,8 +45,8 @@ const LoggedInButton = styled.button`
   bottom: 0;
   width: 100%;
   padding: 20px;
-  background: #27ae60; 
-  color: #ecf0f1; 
+  background: #27ae60;
+  color: #ecf0f1;
   height: 60px;
 `
 
@@ -59,27 +54,32 @@ const CloseButton = styled.div`
   position: absolute;
   left: 10px;
   top: 10px;
-  color: #ecf0f1; 
+  color: #ecf0f1;
 `
 
 const StyledLink = styled(Link)`
-  color: #ecf0f1; 
+  color: #ecf0f1;
   text-decoration: none;
   font-weight: bold; // Fügt Fettdruck hinzu
-  
+
   padding: 2px; // Fügt Polsterung hinzu
   background-color: rgba(0, 0, 0, 0.1); // Fügt eine Hintergrundfarbe hinzu
   border-radius: 5px; // Rundet die Ecken ab
   &:hover {
-    color: #bdc3c7; 
-    background-color: rgba(0, 0, 0, 0.2); // Ändert die Hintergrundfarbe beim Überfahren mit der Maus
+    color: #bdc3c7;
+    background-color: rgba(
+      0,
+      0,
+      0,
+      0.2
+    ); // Ändert die Hintergrundfarbe beim Überfahren mit der Maus
   }
 `
 
 const testTodoIds = ['1', '2']
 
 const Sidebar = () => {
-  const { isLoggedIn, setLoggedIn } = useContext(AuthContext);
+  const { isLoggedIn, setLoggedIn } = useContext(AuthContext)
   const [cookies, setCookie] = useCookies(['database'])
   const navigate = useNavigate()
 
@@ -91,7 +91,9 @@ const Sidebar = () => {
       cookies: any,
       setCookie: any,
     ): Promise<Array<TodoListPouchListing>> => {
-      const remoteDB = new PouchDB(`http://localhost:5984/${cookies.database}`)
+      const remoteDB = new PouchDB(
+        `http://${encodeURIComponent('admin')}:${encodeURIComponent('12345')}@localhost:5984/${cookies.database}`,
+      )
       remoteDB.info().then((info) => {
         console.log('info', info)
       })
@@ -150,39 +152,52 @@ const Sidebar = () => {
       </Block>
 
       <Block>
-  <h1>To-Do-Listen</h1>
-  <div>
-    {todoListNames
-      .filter((todoListName) => todoListName.title !== undefined)
-      .map((todoListName) => (
-        <div key={todoListName._id} style={{ display: 'flex', justifyContent: 'space-between' }}>
-          <StyledLink to={`/todoList/${todoListName._id}`}>
-             {todoListName.title}
-          </StyledLink>
-          <button onClick={() => editTitle(todoListName._id)} style={{width: 'auto'}}>
-            <Pen size={30} />
-          </button>
+        <h1>To-Do-Listen</h1>
+        <div>
+          {todoListNames
+            .filter((todoListName) => todoListName.title !== undefined)
+            .map((todoListName) => (
+              <div
+                key={todoListName._id}
+                style={{ display: 'flex', justifyContent: 'space-between' }}
+              >
+                <StyledLink to={`/todoList/${todoListName._id}`}>
+                  {todoListName.title}
+                </StyledLink>
+                <button
+                  onClick={() => editTitle(todoListName._id)}
+                  style={{ width: 'auto' }}
+                >
+                  <Pen size={30} />
+                </button>
+              </div>
+            ))}
         </div>
-      ))}
-  </div>
 
-  {/* Hier können Sie Ihre To-Do-Liste einfügen */}
-</Block>
+        {/* Hier können Sie Ihre To-Do-Liste einfügen */}
+      </Block>
 
       <Block>
         <StyledLink to="/register">Registrieren</StyledLink>
       </Block>
       {isLoggedIn ? (
-        <LogoutButton onClick={() => {setLoggedIn(false);
-          toast.success('Erfolgreich ausgeloggt', {
-            autoClose: 2000
-        });
-          // token löschen
-          localStorage.removeItem('token');
-          navigate('/login');
-        }}>Ausloggen</LogoutButton>
+        <LogoutButton
+          onClick={() => {
+            setLoggedIn(false)
+            toast.success('Erfolgreich ausgeloggt', {
+              autoClose: 2000,
+            })
+            // token löschen
+            localStorage.removeItem('token')
+            navigate('/login')
+          }}
+        >
+          Ausloggen
+        </LogoutButton>
       ) : (
-        <LoggedInButton onClick={() => navigate('/login')}>Einloggen</LoggedInButton>
+        <LoggedInButton onClick={() => navigate('/login')}>
+          Einloggen
+        </LoggedInButton>
       )}
     </SidebarWrapper>
   )

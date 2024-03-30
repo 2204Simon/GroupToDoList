@@ -3,7 +3,7 @@ import { couch } from './server.ts' // Importieren Sie die CouchDB-Instanz aus I
 import { v4 as uuidv4 } from 'uuid'
 import { validate as isUuid } from 'uuid'
 import { getUserIdFromToken } from './jwtMiddleware.ts'
-import { publicDocumentsCouchDB } from './couchUtilities.ts'
+import { findUserByToken, publicDocumentsCouchDB } from './couchUtilities.ts'
 
 export const GroupToDoListRoutes = express.Router()
 const dbNameUsers = 'users'
@@ -11,12 +11,9 @@ const dbNameUsers = 'users'
 
 GroupToDoListRoutes.post('/todolists', async (req, res) => {
   try {
-    console.log(req.cookies)
     const { title } = req.body
     const { database, token } = req.cookies
-    console.log('CookieDatabaseId:', database)
-    console.log('CookieToken:', token)
-
+    const user = await findUserByToken(req.cookies.token)
     const id = uuidv4() // Generieren Sie eine eindeutige ID
     const dbName = database ? database : `db_${id}`
     const dbs = await couch.listDatabases()
@@ -29,23 +26,42 @@ GroupToDoListRoutes.post('/todolists', async (req, res) => {
       const dbName = `db_${databaseId}` // replace with your database name
       await couch.createDatabase(dbName)
       await publicDocumentsCouchDB(dbName)
-
+      const dbGroupTodoName = `${groupListId}`
+      await couch.createDatabase(dbGroupTodoName)
+      // Update the security settings
+      await publicDocumentsCouchDB(dbGroupTodoName)
+      const user = await findUserByToken(req.cookies.token)
+      const member = [{ email: user.email, role: 'admin' }]
+      await publicDocumentsCouchDB(dbName)
+      await couch.insert(database, {
+        _id: groupListId,
+        title,
+        member,
+        dbGroupTodoName,
+      })
       console.log('created new database!!!!!!!')
+
       res.cookie('database', `db_${databaseId}`, {
         httpOnly: false,
         sameSite: 'none',
         secure: true,
-      }) // Setzen Sie den Cookie
+      })
     }
 
     if (database) {
       console.log('CookieDatabase ID:', database)
       const dbName = `${groupListId}`
       await couch.createDatabase(dbName)
-      // Update the security settings
+
+      const member = [{ email: user.email, role: 'admin' }]
       await publicDocumentsCouchDB(dbName)
 
-      await couch.insert(database, { _id: groupListId, title, dbName })
+      await couch.insert(database, {
+        _id: groupListId,
+        title,
+        dbName,
+        member,
+      })
     }
 
     if (!token) {
