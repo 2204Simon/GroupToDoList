@@ -20,10 +20,11 @@ TodoRoutes.get('/todos', async (req, res) => {
   // Beispiel-Endpunkt zum Erstellen eines neuen To-Dos
   TodoRoutes.post('/todos', async (req, res) => {
     try {
-      const { title, description } = req.body
+      const { title, description, assignedTo } = req.body
       const todo = await couch.insert(dbName, {
         title,
         description,
+        assignedTo,
         completed: false,
       })
       res.json(todo.data)
@@ -52,7 +53,7 @@ TodoRoutes.get('/todos', async (req, res) => {
   TodoRoutes.put('/todos/:id', async (req, res) => {
     try {
       const id = req.params.id
-      const { title, description, completed } = req.body
+      const { title, description, assignedTo, completed } = req.body
       const todo = await couch.get(dbName, id)
       if (todo.data._id) {
         const updatedTodo = await couch.update(dbName, {
@@ -60,6 +61,7 @@ TodoRoutes.get('/todos', async (req, res) => {
           _rev: todo.data._rev,
           title,
           description,
+          assignedTo,
           completed,
         })
         res.json(updatedTodo.data)

@@ -2,6 +2,7 @@ export interface Todo {
   _id: string
   title: string
   description: string
+  assignedTo?: string
   completed: boolean
 }
 
@@ -9,6 +10,7 @@ export interface TodoDocument
   extends PouchDB.Core.ExistingDocument<PouchDB.Core.AllDocsMeta> {
   title: string
   description: string
+  assignedTo?: string
   completed: boolean
 }
 

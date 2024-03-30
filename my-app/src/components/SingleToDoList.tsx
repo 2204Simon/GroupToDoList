@@ -10,7 +10,8 @@ import TodoList from './ToDoList'
 export default function SingleToDoList() {
   const { id } = useParams()
   const [title, setTitle] = useState('')
-  const [caption, setCaption] = useState('')
+  const [description, setDescription] = useState('')
+  const [assignedTo, setAssignedTo] = useState('')
   const [todos, setTodos] = useState<Array<Todo>>([])
   
   useEffect(() => {
@@ -44,13 +45,19 @@ export default function SingleToDoList() {
           />
           <input
             type="text"
-            value={caption}
-            onChange={(e) => setCaption(e.target.value)}
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
             placeholder="Beschreibung"
           />
+          <input
+          type='text'
+          value={assignedTo}
+          onChange={(e) => setAssignedTo(e.target.value)}
+          placeholder='Zugewiesen an'
+        />
           <button
             onClick={async () => {
-              const newTodo = await createTodo(id, title, caption, false)
+              const newTodo = await createTodo(id, title, description, assignedTo, false)
               setTodos(prevTodos => [...prevTodos, newTodo])
             }}
           >

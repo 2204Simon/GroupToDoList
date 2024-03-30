@@ -7,7 +7,7 @@ import { Plus } from 'phosphor-react'
 const GroupToDoList: React.FC<ToDoListsProps> = ({
 }) => {
   const [todos, setTodos] = useState<Todo[]>([])
-  const [newTodo, setNewTodo] = useState({ title: '', description: '' })
+  const [newTodo, setNewTodo] = useState({ title: '', description: '', assignedTo: '', completed: false})
 
   useEffect(() => {
     loadTodos()
@@ -35,7 +35,7 @@ const GroupToDoList: React.FC<ToDoListsProps> = ({
       })
 
       loadTodos()
-      setNewTodo({ title: '', description: '' })
+      setNewTodo({ title: '', description: '', assignedTo: '', completed: false})
     } catch (error) {
       console.error(error)
     }
@@ -86,7 +86,7 @@ const GroupToDoList: React.FC<ToDoListsProps> = ({
 
   return (
     <>
-      <TodoList todos={todos} onDelete={deleteTodo} onEdit={editTodo} onComplete={completeTodo}/>
+      <TodoList todos={todos} deleteTodo={deleteTodo} editTodo={editTodo} onComplete={completeTodo} />
 
       <form onSubmit={addTodo}>
         <label htmlFor="title">Titel:</label>
@@ -108,6 +108,17 @@ const GroupToDoList: React.FC<ToDoListsProps> = ({
             setNewTodo({ ...newTodo, description: e.target.value })
           }
           required
+        />
+
+        <label htmlFor="assignedTo">Zugewiesen an:</label>
+        <input
+          type="text"
+          id="assignedTo"
+          name="assignedTo"
+          value={newTodo.assignedTo}
+          onChange={(e) =>
+            setNewTodo({ ...newTodo, assignedTo: e.target.value })
+          }
         />
 
         <button type="submit"><Plus size={30} /></button>
