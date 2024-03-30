@@ -2,12 +2,9 @@
 import React from 'react'
 import { Todo, TodoListProps } from '../types/types'
 import TodoListItem from './ToDoListItem'
-import { completeTodo, deleteTodo } from './todofunctions'
+import { completeTodo, deleteTodo, updateTodo } from './todofunctions'
 
 interface TodoListActions {
-  // onDelete: (id: string) => void
-  // onEdit: (id: string, updatedTodo: Todo) => void
-  // onComplete: (id: string, isCompleted: boolean) => void
   groupListId: string
 }
 
@@ -22,11 +19,11 @@ const TodoList: React.FC<TodoListProps & TodoListActions> = ({
     deleteTodo(groupListId, id)
   }
   function onEdit(id: string, updatedTodo: Todo) {
-    console.log('onEdit', id, updatedTodo)
+    updateTodo(groupListId, id, updatedTodo)
   }
   return (
     <div>
-      {todos.map((todo) => (
+      {todos.filter(todo => todo._id !== undefined).map((todo) => (
         <TodoListItem
           key={todo._id}
           todo={todo}
