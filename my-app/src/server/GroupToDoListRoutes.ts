@@ -3,6 +3,7 @@ import { couch } from './server.ts' // Importieren Sie die CouchDB-Instanz aus I
 import { v4 as uuidv4 } from 'uuid'
 import { validate as isUuid } from 'uuid'
 import { getUserIdFromToken } from './jwtMiddleware.ts'
+import { publicDocumentsCouchDB } from './couchUtilities.ts'
 
 export const GroupToDoListRoutes = express.Router()
 const dbNameUsers = 'users'
@@ -25,22 +26,10 @@ GroupToDoListRoutes.post('/todolists', async (req, res) => {
     if (!dbs.includes(database) || !database) {
       const databaseId = uuidv4()
       console.log('Database ID:', databaseId)
-      await couch.createDatabase(`db_${databaseId}`) // Erstellen Sie die Datenbank, wenn sie nicht existiert
-      await couch.request({
-        db: dbName,
-        method: 'put',
-        doc: '_security',
-        body: {
-          admins: {
-            names: [],
-            roles: [],
-          },
-          members: {
-            names: [],
-            roles: [],
-          },
-        },
-      })
+      const dbName = `db_${databaseId}` // replace with your database name
+      await couch.createDatabase(dbName)
+      await publicDocumentsCouchDB(dbName)
+
       console.log('created new database!!!!!!!')
       res.cookie('database', `db_${databaseId}`, {
         httpOnly: false,
@@ -48,24 +37,14 @@ GroupToDoListRoutes.post('/todolists', async (req, res) => {
         secure: true,
       }) // Setzen Sie den Cookie
     }
+
     if (database) {
       console.log('CookieDatabase ID:', database)
-      await couch.createDatabase(`${groupListId}`)
-      await couch.request({
-        db: groupListId,
-        method: 'put',
-        doc: '_security',
-        body: {
-          admins: {
-            names: [],
-            roles: [],
-          },
-          members: {
-            names: [],
-            roles: [],
-          },
-        },
-      })
+      const dbName = `${groupListId}`
+      await couch.createDatabase(dbName)
+      // Update the security settings
+      await publicDocumentsCouchDB(dbName)
+
       await couch.insert(database, { _id: groupListId, title, dbName })
     }
 
