@@ -44,8 +44,8 @@ const TodoListItem: React.FC<TodoListItemProps & TodoListItemActions> = ({
       <div style={{ textDecoration: isCompleted ? 'line-through' : 'none' }}>
         {isEditing ? (
           <>
-            <input type="text" name="title" value={updatedTodo.title} onChange={handleChange} />
-            <input type="text" name="description" value={updatedTodo.description} onChange={handleChange} />
+            <input type="text" name="To-Do Titel" value={updatedTodo.title} onChange={handleChange} />
+            <input type="text" name="Beschreibung" value={updatedTodo.description} onChange={handleChange} />
           </>
         ) : (
           <>

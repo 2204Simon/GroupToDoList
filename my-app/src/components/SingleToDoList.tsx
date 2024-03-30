@@ -54,16 +54,9 @@ export default function SingleToDoList() {
               setTodos(prevTodos => [...prevTodos, newTodo])
             }}
           >
-            create Todo
+            Todo hinzufügen
           </button>{' '}
-          <br />
-          <button
-            onClick={async () => {
-              const todos = await loadTodos(id as string)
-            }}
-          >
-            load Todos
-          </button>{' '}
+          
           <br />
           <TodoList todos={todos} groupListId={id} />
         </>
