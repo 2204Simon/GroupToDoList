@@ -56,16 +56,18 @@ export async function findUserByToken(token: string) {
       }
     }
     const { data: docs } = await couch.mango('users', query, {})
-    if (docs.docs.length > 0) {
-      return docs.docs[0]
-    } else {
-      console.error(`User with id ${userId.userId} does not exist.`);
-      return null;
-    }
+    const user = docs.docs[0];
+      // Stellen Sie sicher, dass das Benutzerobjekt ein databaseId-Feld enthält
+      if (!user.databaseId) {
+        throw new Error('User has no databaseId')
+      }
+      return user;
+    
   } catch (error: any) {
     console.error(error);
-    console.error(error.body);
-    console.error(error.stack);
+    if (error.code === 'EDOCMISSING') {
+      console.error(`Document with id ${userId.userId} does not exist.`);
+    }
     return null;
   }
 }

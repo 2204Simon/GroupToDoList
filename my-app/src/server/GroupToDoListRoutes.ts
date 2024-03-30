@@ -1,4 +1,3 @@
-import { GroupTodoList } from './../types/types'
 import express from 'express'
 import { couch } from './server.ts' // Importieren Sie die CouchDB-Instanz aus Ihrer Hauptserverdatei
 import { v4 as uuidv4 } from 'uuid'
@@ -19,6 +18,10 @@ GroupToDoListRoutes.post('/todolists', async (req, res) => {
     const { title } = req.body
     const { database, token } = req.cookies
     const user = await findUserByToken(req.cookies.token)
+    if (!user) {
+      res.status(404).json({ error: 'User not found' })
+      return
+    }
     const id = uuidv4() // Generieren Sie eine eindeutige ID
     const dbName = database ? database : `db_${id}`
     const dbs = await couch.listDatabases()
@@ -86,38 +89,29 @@ await couch.insert('users', updatedUser)
     res.status(500).json({ error: 'Internal Server Error' })
   }
 })
-
-// GroupToDoListRoutes.get('/todolists', async (req, res) => {
-//   try {
-//     console.log(req.cookies.token)
-
-//     const userId = getUserIdFromToken(req.cookies.token)
-//     if (!userId) {
-//       res.status(404).json({ error: 'User not found' })
-//       return
-//     }
-//     const dbs = await couch.listDatabases()
-//     const user = await couch.get(dbNameUsers, userId)
-
-//     const todolists = await Promise.all(
-//       user.data.groupTodoLists
-//         .filter((todoList: { _id: any; role: any }) => isUuid(todoList._id))
-//         .map(async (todoList: { _id: any; role: any }) => {
-//           const dbName = `${todoList._id}`
-//           if (!dbs.includes(dbName)) {
-//             return null // Wenn die Datenbank nicht existiert, überspringen Sie sie
-//           }
-//           const db = couch.use(dbName)
-//           const title = await db.get('title')
-//           return { id: todoList._id, title: title.data }
-//         }),
-//     )
-//     res.json(todolists.filter((todoList: any) => todoList !== null))
-//   } catch (err) {
-//     console.error(err)
-//     res.status(500).json({ error: 'Internal Server Error' })
-//   }
-// })
+GroupToDoListRoutes.get('/todolists', async (req, res) => {
+  try {
+    const user = await findUserByToken(req.cookies.token)
+    console.log('User:', user) // Protokollierung hinzufügen
+    if (!user) {
+      res.status(404).json({ error: 'User not found' })
+      return
+    }
+    const { databaseId } = user
+    console.log('Database ID:', databaseId) // Protokollierung hinzufügen
+    const dbs = await couch.listDatabases()
+    const mangoQuery = { selector: { _id: { $gt: null } } }
+    const { data: docs } = await couch.mango(databaseId, mangoQuery)
+    const todoLists = docs.docs.map((doc: { _id: any; title: any }) => ({
+      id: doc._id,
+      title: doc.title,
+    }))
+    res.json(todoLists)
+  } catch (err) {
+    console.error(err)
+    res.status(500).json({ error: 'Internal Server Error' })
+  }
+})
 
 GroupToDoListRoutes.post('/inviteTodoLists', async (req, res) => {
   try {

@@ -18,17 +18,20 @@ const AllGroupToDoLists: React.FC = () => {
         },
         credentials: 'include',
       })
-
+  
       if (!response.ok) {
         console.error(`Server responded with status code ${response.status}`)
         return
       }
+  
       const data = await response.json()
-      //noch Bug bei data.map keine Funktion
+      console.log('data', data);
+  
       const todoLists = data.map((todoList: { id: string; title: string }) => ({
         id: todoList.id,
         title: todoList.title,
       }))
+  
       setTodoLists(todoLists)
       console.log(todoLists)
     } catch (error) {
