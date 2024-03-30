@@ -40,13 +40,13 @@ export default function SingleToDoList() {
             type="text"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
-            placeholder="Title"
+            placeholder="To-Do Titel"
           />
           <input
             type="text"
             value={caption}
             onChange={(e) => setCaption(e.target.value)}
-            placeholder="Caption"
+            placeholder="Beschreibung"
           />
           <button
             onClick={async () => {
