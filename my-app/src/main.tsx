@@ -12,6 +12,7 @@ import {useCookies} from 'react-cookie'
 import { ToastContainer } from 'react-toastify'
 import "react-toastify/dist/ReactToastify.css";
 import { AuthContext } from './AuthContext';
+import './App.css'
 
 const Layout = styled.div`
   display: flex;

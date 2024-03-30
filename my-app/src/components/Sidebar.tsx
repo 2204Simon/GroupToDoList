@@ -8,25 +8,26 @@ import { TodoListPouchListing } from '../types/types'
 import { AuthContext } from '../AuthContext'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
+import {Pen } from 'phosphor-react'
 
 const SidebarWrapper = styled.div<{ isOpen: boolean }>`
   width: ${(props) => (props.isOpen ? '25vw' : '0')};
   transition: 0.3s;
   overflow: hidden;
   margin-right: 40px;
-  background: #b3dee5;
-
-  box-shadow: #000000;
+  color: #ecf0f1; // Ändern Sie die Textfarbe in #ecf0f1
+  background: #34495e; // Ändern Sie die Hintergrundfarbe in #34495e
+  
   backdrop-filter: blur(4px);
   -webkit-backdrop-filter: blur(4px);
   border-radius: 10px;
-  border: 1px solid rgba(200, 200, 200, 0.18); // Ändern Sie die Randfarbe in ein weicheres Grau
   height: 95vh;
+  min-width: 150px;
 `
 
 const Block = styled.div`
   padding: 20px;
-  border-bottom: 3px solid #fae6b1; // Ändern Sie die Randfarbe in ein weicheres Grau
+  border-bottom: 1px solid #2c3e50; // Ändern Sie die Randfarbe in ein dunkleres Blau
 `
 
 const LogoutButton = styled.button`
@@ -34,36 +35,51 @@ const LogoutButton = styled.button`
   bottom: 0;
   width: 100%;
   padding: 20px;
-  background: #e21818;
-  color: #333; // Ändern Sie die Textfarbe in ein dunkleres Grau
+  background: #c0392b; 
+  color: #ecf0f1; 
+  height: 60px;
+
+  
+  
+
+
 `
+
 const LoggedInButton = styled.button`
   position: absolute;
   bottom: 0;
   width: 100%;
   padding: 20px;
-  background: #225d23; // Ändern Sie die Hintergrundfarbe in ein weicheres Grau
-  color: #333; // Ändern Sie die Textfarbe in ein dunkleres Grau
+  background: #27ae60; 
+  color: #ecf0f1; 
+  height: 60px;
 `
 
 const CloseButton = styled.div`
   position: absolute;
   left: 10px;
   top: 10px;
-  color: #333; // Ändern Sie die Textfarbe in ein dunkleres Grau
+  color: #ecf0f1; 
 `
 
 const StyledLink = styled(Link)`
-  color: #333; // Ändern Sie die Textfarbe in ein dunkleres Grau
-  text-decoration: none; // Entfernt die Unterstreichung
+  color: #ecf0f1; 
+  text-decoration: none;
+  font-weight: bold; // Fügt Fettdruck hinzu
+  
+  padding: 2px; // Fügt Polsterung hinzu
+  background-color: rgba(0, 0, 0, 0.1); // Fügt eine Hintergrundfarbe hinzu
+  border-radius: 5px; // Rundet die Ecken ab
   &:hover {
-    color: #666; // Ändert die Farbe beim Überfahren mit der Maus
+    color: #bdc3c7; 
+    background-color: rgba(0, 0, 0, 0.2); // Ändert die Hintergrundfarbe beim Überfahren mit der Maus
   }
 `
 
 const testTodoIds = ['1', '2']
 
 const Sidebar = () => {
+  const { isLoggedIn, setLoggedIn } = useContext(AuthContext);
   const [cookies, setCookie] = useCookies(['database'])
   const navigate = useNavigate()
 
@@ -118,6 +134,10 @@ const Sidebar = () => {
   const toggleSidebar = () => {
     setIsOpen(!isOpen)
   }
+  function editTitle(_id: string): void {
+    throw new Error('Function not implemented.') // TODO: anbinden!!
+  }
+
   return (
     <SidebarWrapper isOpen={isOpen}>
       {/* <CloseButton onClick={toggleSidebar}>
@@ -130,29 +150,35 @@ const Sidebar = () => {
       </Block>
 
       <Block>
-        <h1>To-Do-Listen</h1>
-        <div>
-          {todoListNames
-            .filter((todoListName) => todoListName.title !== undefined)
-            .map((todoListName) => (
-              <div key={todoListName._id}>
-                <StyledLink to={`/todoList/${todoListName._id}`}>
-                  To-Do-Liste {todoListName.title}
-                </StyledLink>
-              </div>
-            ))}
+  <h1>To-Do-Listen</h1>
+  <div>
+    {todoListNames
+      .filter((todoListName) => todoListName.title !== undefined)
+      .map((todoListName) => (
+        <div key={todoListName._id} style={{ display: 'flex', justifyContent: 'space-between' }}>
+          <StyledLink to={`/todoList/${todoListName._id}`}>
+             {todoListName.title}
+          </StyledLink>
+          <button onClick={() => editTitle(todoListName._id)} style={{width: 'auto'}}>
+            <Pen size={30} />
+          </button>
         </div>
+      ))}
+  </div>
 
-        {/* Hier können Sie Ihre To-Do-Liste einfügen */}
+  {/* Hier können Sie Ihre To-Do-Liste einfügen */}
+</Block>
+
+      <Block>
+        <StyledLink to="/register">Registrieren</StyledLink>
       </Block>
-
-      <LogoutButton
-        onClick={() => {
-          /* Hier können Sie Ihre Ausloggen-Funktion einfügen */
-        }}
-      >
-        Ausloggen
-      </LogoutButton>
+      {isLoggedIn ? (
+        <LogoutButton onClick={() => {setLoggedIn(false);
+          toast.success('Erfolgreich ausgeloggt');
+        }}>Ausloggen</LogoutButton>
+      ) : (
+        <LoggedInButton onClick={() => navigate('/login')}>Einloggen</LoggedInButton>
+      )}
     </SidebarWrapper>
   )
 }
