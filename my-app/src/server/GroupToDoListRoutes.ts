@@ -10,7 +10,6 @@ import {
 } from './couchUtilities.ts'
 
 export const GroupToDoListRoutes = express.Router()
-const dbNameUsers = 'users'
 // Endpunkt zum Erstellen einer neuen Todo-Liste
 
 GroupToDoListRoutes.post('/todolists', async (req, res) => {
@@ -26,11 +25,7 @@ GroupToDoListRoutes.post('/todolists', async (req, res) => {
     }
     // const id = uuidv4() // Generieren Sie eine eindeutige ID
     const groupListId = `gtd_${uuidv4()}`
-    console.log('database:', database)
-    console.log('UserdbId', user.databaseId)
     if (user.databaseId !== database) {
-      console.log('Database IDS:', database) // Protokollierung hinzufügen
-      console.log('databaseId !== database', user.databaseId, database)
       //updateCookie
       res.cookie('database', userDatabaseId, {
         httpOnly: false,
@@ -43,12 +38,15 @@ GroupToDoListRoutes.post('/todolists', async (req, res) => {
       const dbName = `${groupListId}`
       await couch.createDatabase(dbName)
       const member = [{ email: user.email, role: 'admin' }]
+      await couch.insert(dbName, {
+        member,
+        type: 'roles',
+      })
       await publicDocumentsCouchDB(dbName)
       await couch.insert(userDatabaseId, {
         _id: groupListId,
         title,
         dbName,
-        member,
       })
       res.json({ message: 'Todo-Liste erfolgreich erstellt', groupListId }) // Senden Sie die ID zurück
       return
@@ -89,19 +87,15 @@ GroupToDoListRoutes.get('/todolists', async (req, res) => {
 
 GroupToDoListRoutes.post('/inviteTodoLists', async (req, res) => {
   try {
-    const { email, groupListId, title } = req.body
+    const { email, groupListId, role } = req.body
     console.log(email, groupListId)
-    const { data, header, status } = await findUserByEmail(email)
-    if (status === 404) {
+    const user = await findUserByEmail(email)
+    if (!user) {
       res.status(404).json({ error: 'User not found' })
       return
     }
-    const groupList = await couch.find(data.databaseId, groupListId)
-    const singlemember = { email: data.email, role: 'member' }
-    groupList.data.member.push(singlemember)
-
-    // Save the updated group list back to the database
-    await couch.update(data.databaseId, groupListId, groupList)
+    const updateGroupList = await couch.find(user.databaseId, groupListId)
+    const updateUserGrupsList = await couch.find(user.databaseId, 'userGroups')
   } catch (err) {
     console.error(err)
     res.status(500).json({ error: 'Internal Server Error' })
