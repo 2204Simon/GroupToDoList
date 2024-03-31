@@ -87,15 +87,23 @@ GroupToDoListRoutes.get('/todolists', async (req, res) => {
 
 GroupToDoListRoutes.post('/inviteTodoLists', async (req, res) => {
   try {
-    const { email, groupListId, role } = req.body
+    const { email, groupListId, role, title } = req.body
     console.log(email, groupListId)
     const user = await findUserByEmail(email)
     if (!user) {
       res.status(404).json({ error: 'User not found' })
       return
     }
-    const updateGroupList = await couch.find(user.databaseId, groupListId)
-    const updateUserGrupsList = await couch.find(user.databaseId, 'userGroups')
+    const member = [{ email: user.email, role }]
+    await couch.insert(user.databaseId, {
+      _id: groupListId,
+      title,
+      groupListId,
+    })
+    await couch.insert(groupListId, {
+      member,
+      type: 'roles',
+    })
   } catch (err) {
     console.error(err)
     res.status(500).json({ error: 'Internal Server Error' })

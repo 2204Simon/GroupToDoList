@@ -131,17 +131,30 @@ export default function SingleToDoList() {
                   autoClose: 2000,
                 })
               } else {
-                const newTodo = await createTodo(
-                  id,
-                  title,
-                  description,
-                  assignedTo,
-                  false,
-                  label,
-                  dueDate as Date,
+                const response = await fetch(
+                  'http://localhost:4001/api/inviteTodoLists',
+                  {
+                    method: 'POST',
+                    headers: {
+                      'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                      email,
+                      groupListId: id, // Sie müssen diese Variable definieren
+                      role: userRole, // Sie müssen diese Variable definieren
+                      title: undefined, // Sie müssen diese Variable definieren
+                    }),
+                    credentials: 'include',
+                  },
                 )
-                setTodos((prevTodos) => [...prevTodos, newTodo])
-                toast.success('To-Do hinzugefügt', { autoClose: 2000 })
+
+                if (!response.ok) {
+                  toast.error('Fehler beim Hinzufügen der Person', {
+                    autoClose: 2000,
+                  })
+                } else {
+                  toast.success('Person hinzugefügt', { autoClose: 2000 })
+                }
               }
             }}
           >
