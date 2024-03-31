@@ -87,14 +87,20 @@ GroupToDoListRoutes.get('/todolists', async (req, res) => {
 
 GroupToDoListRoutes.post('/inviteTodoLists', async (req, res) => {
   try {
+    console.log('req.body:', req.body)
+
     const { email, groupListId, role, title } = req.body
-    console.log(email, groupListId)
+    console.log(email, groupListId, role, title)
+    console.log('role:', role)
+    console.log('title:', title)
+
     const user = await findUserByEmail(email)
     if (!user) {
       res.status(404).json({ error: 'User not found' })
       return
     }
-
+    console.log('User:', user) // Protokollierung hinzufügen
+    console.log('User Database ID:', user.databaseId) // Protokollierung hinzufügen
     await couch.insert(user.databaseId, {
       _id: groupListId,
       title,

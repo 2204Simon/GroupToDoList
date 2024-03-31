@@ -110,8 +110,10 @@ export const completeTodo = async (
 }
 
 export const getGroupListName = async (groupListId: string, cookie: any) => {
-  const localDB = new PouchDB(cookie.database)
   try {
+    console.log('getGroupListName', groupListId, cookie)
+
+    const localDB = new PouchDB(cookie.database)
     const doc: any = await localDB.get(groupListId)
     console.log(doc)
     const title = doc.title
