@@ -102,6 +102,7 @@ GroupToDoListRoutes.post('/inviteTodoLists', async (req, res) => {
       groupListId,
     })
     await addMemberToRole(email, role, groupListId)
+    res.status(200).json({ message: 'Person hinzugefügt' })
   } catch (err) {
     console.error(err)
     res.status(500).json({ error: 'Internal Server Error' })
