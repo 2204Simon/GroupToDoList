@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { Todo, TodoListItemProps } from '../types/types'
 import { FaCheck, FaTimes } from 'react-icons/fa'; 
 import { Pen, FloppyDisk, Trash } from 'phosphor-react';
+import { toast } from 'react-toastify';
 
 interface TodoListItemActions {
   onDelete: (id: string) => void,
@@ -20,6 +21,7 @@ const TodoListItem: React.FC<TodoListItemProps & TodoListItemActions> = ({
   const [isCompleted, setIsCompleted] = useState(todo.completed); // Zustand für erledigte Todos
 
   const handleDelete = () => {
+    toast.error('To-Do gelöscht');
     onDelete(todo._id)
   }
 
@@ -27,14 +29,17 @@ const TodoListItem: React.FC<TodoListItemProps & TodoListItemActions> = ({
     if (isEditing) {
       onEdit(todo._id, updatedTodo)
     }
+    toast.info(`To-Do ${isEditing ? 'aktualisiert' : 'bearbeiten'}`);
     setIsEditing(!isEditing);
   }
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    
     setUpdatedTodo({ ...updatedTodo, [event.target.name]: event.target.value });
   }
 
   const handleToggle = () => { // Funktion zum Umschalten des erledigten Zustands
+    toast.success(`To-Do ${isCompleted ? 'wiederhergestellt' : 'erledigt'}`);
     setIsCompleted(!isCompleted);
     onComplete(todo._id, !isCompleted);
   }

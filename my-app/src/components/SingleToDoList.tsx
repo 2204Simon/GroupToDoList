@@ -6,6 +6,7 @@ import {
 import { useEffect, useState } from 'react'
 import { Todo } from '../types/types'
 import TodoList from './ToDoList'
+import { toast } from 'react-toastify'
 
 export default function SingleToDoList() {
   const { id } = useParams()
@@ -43,12 +44,14 @@ export default function SingleToDoList() {
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             placeholder="To-Do Titel"
+            
           />
           <input
             type="text"
             value={description}
             onChange={(e) => setDescription(e.target.value)}
             placeholder="Beschreibung"
+            
           />
           <input
           type='text'
@@ -68,8 +71,13 @@ export default function SingleToDoList() {
         </select>
           <button
             onClick={async () => {
-              const newTodo = await createTodo(id, title, description, assignedTo, false, label)
-              setTodos(prevTodos => [...prevTodos, newTodo])
+              if (title === '' || description === '') {
+                toast.error('Titel und Beschreibung dürfen nicht leer sein', { autoClose: 2000 })
+              } else {
+                const newTodo = await createTodo(id, title, description, assignedTo, false, label)
+                setTodos(prevTodos => [...prevTodos, newTodo])
+                toast.success('To-Do hinzugefügt', { autoClose: 2000 })
+              }
             }}
           >
             Todo hinzufügen
