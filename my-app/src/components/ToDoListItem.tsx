@@ -30,7 +30,7 @@ const TodoListItem: React.FC<TodoListItemProps & TodoListItemActions> = ({
     setIsEditing(!isEditing);
   }
 
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     setUpdatedTodo({ ...updatedTodo, [event.target.name]: event.target.value });
   }
 
@@ -47,28 +47,46 @@ const TodoListItem: React.FC<TodoListItemProps & TodoListItemActions> = ({
             <input type="text" name="title" value={updatedTodo.title} onChange={handleChange} placeholder='To-Do Titel' />
             <input type="text" name="description" value={updatedTodo.description} onChange={handleChange} placeholder='Beschreibung'/>
             <input type="text" name="assignedTo" value={updatedTodo.assignedTo} onChange={handleChange} placeholder='Zugewiesen an'/>
+          <select
+            name="label"
+            value={updatedTodo.label}
+            onChange={handleChange}
+            defaultValue={'Hohe Priorität'}
+          >
+            
+            <option value="Hohe Priorität">Hohe Priorität</option>
+            <option value="Mittlere Priorität">Mittlere Priorität</option>
+            <option value="Niedrige Priorität">Niedrige Priorität</option>
+          </select>
           </>
         ) : (
           <>
-            <strong>{todo.title}</strong>: {todo.description}{' '} {todo.assignedTo}
+          
+          <strong>Titel: {todo.title}</strong>
+<br />
+Beschreibung: {todo.description}
+<br />
+Zugewiesen an: {todo.assignedTo}
+<br />
+Label: {todo.label}
           </>
         )}
       </div>
       <div style={{ display: 'flex', justifyContent: 'space-between', width: '30%', minWidth: '200px' }}>
-        {!isEditing && (
-          <button style={{width: 'auto'}} onClick={handleToggle}> 
-            {isCompleted ? <FaCheck size={30} /> : <FaTimes size={30} />} 
-          </button>
-        )}
-        <div style={{ display: 'flex' }}>
-          <button style={{width: 'auto', marginLeft: '10px'}} onClick={handleEdit}>
-            {isEditing ? <FloppyDisk size={30}/> : <Pen size={30}/>}
-          </button>
-          {!isEditing && (
-            <button style={{width: 'auto', marginLeft: '10px'}} onClick={handleDelete}><Trash size={30}/></button>
-          )}
-        </div>
-      </div>
+  <div style={{ display: 'flex' }}>
+    {!isEditing && (
+      <button style={{width: 'auto', marginRight: '10px'}} onClick={handleToggle}> 
+        {isCompleted ? <FaCheck size={30} /> : <FaTimes size={30} />} 
+      </button>
+    )}
+    <button style={{width: 'auto', marginLeft: '10px'}} onClick={handleEdit}>
+      {isEditing ? <FloppyDisk size={30}/> : <Pen size={30}/>}
+    </button>
+    {!isEditing && (
+      <button style={{width: 'auto', marginLeft: '10px'}} onClick={handleDelete}><Trash size={30}/></button>
+    )}
+  </div>
+</div>
     </div>
   )
 }

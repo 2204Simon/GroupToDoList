@@ -12,6 +12,7 @@ export default function SingleToDoList() {
   const [title, setTitle] = useState('')
   const [description, setDescription] = useState('')
   const [assignedTo, setAssignedTo] = useState('')
+  const [label, setLabel] = useState('Hohe Priorität')
   const [todos, setTodos] = useState<Array<Todo>>([])
   
   useEffect(() => {
@@ -55,9 +56,19 @@ export default function SingleToDoList() {
           onChange={(e) => setAssignedTo(e.target.value)}
           placeholder='Zugewiesen an'
         />
+        <select
+          value={label}
+          onChange={(e) => setLabel(e.target.value)}
+          defaultValue={'Hohe Priorität'}
+          
+        >
+          <option value='Hohe Priorität'>Hohe Priorität</option>
+          <option value='Mittlere Priorität'>Mittlere Priorität</option>
+          <option value='Niedrige Priorität'>Niedrige Priorität</option>
+        </select>
           <button
             onClick={async () => {
-              const newTodo = await createTodo(id, title, description, assignedTo, false)
+              const newTodo = await createTodo(id, title, description, assignedTo, false, label)
               setTodos(prevTodos => [...prevTodos, newTodo])
             }}
           >

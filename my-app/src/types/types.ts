@@ -4,6 +4,7 @@ export interface Todo {
   description: string
   assignedTo?: string
   completed: boolean
+  label?: string
 }
 
 export interface TodoDocument
@@ -12,6 +13,7 @@ export interface TodoDocument
   description: string
   assignedTo?: string
   completed: boolean
+  label?: string
 }
 
 export type TodoListPouchListing = {

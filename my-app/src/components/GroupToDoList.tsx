@@ -7,7 +7,7 @@ import { Plus } from 'phosphor-react'
 const GroupToDoList: React.FC<ToDoListsProps> = ({
 }) => {
   const [todos, setTodos] = useState<Todo[]>([])
-  const [newTodo, setNewTodo] = useState({ title: '', description: '', assignedTo: '', completed: false})
+  const [newTodo, setNewTodo] = useState({ title: '', description: '', assignedTo: '', completed: false, label: 'höhere Priorität'})
 
   useEffect(() => {
     loadTodos()
@@ -35,7 +35,7 @@ const GroupToDoList: React.FC<ToDoListsProps> = ({
       })
 
       loadTodos()
-      setNewTodo({ title: '', description: '', assignedTo: '', completed: false})
+      setNewTodo({ title: '', description: '', assignedTo: '', completed: false, label: 'höhere Priorität'})
     } catch (error) {
       console.error(error)
     }
@@ -120,6 +120,22 @@ const GroupToDoList: React.FC<ToDoListsProps> = ({
             setNewTodo({ ...newTodo, assignedTo: e.target.value })
           }
         />
+        <label htmlFor="label">Label:</label>
+        
+<select
+  id="label"
+  name="label"
+  value={newTodo.label} // Nehmen Sie an, dass label ein String ist
+  onChange={(e) =>
+    setNewTodo({ ...newTodo, label: e.target.value }) // Setzen Sie den ausgewählten Wert direkt
+  }
+  defaultValue={'Hohe Priorität'} // Standardwert
+>
+  <option value="Hohe Priorität">Hohe Priorität</option>
+  <option value="Mittlere Priorität">Mittlere Priorität</option>
+  <option value="Niedrige Priorität">Niedrige Priorität</option>
+</select>
+
 
         <button type="submit"><Plus size={30} /></button>
       </form>

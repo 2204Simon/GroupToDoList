@@ -7,6 +7,7 @@ export function createTodo(
   description: string,
   assignedTo: string,
   completed: boolean,
+  label: string,
 ): Promise<Todo> {
   const remoteDB = new PouchDB(`http://localhost:5984/${todoDatenbankName}`)
   const localDB = new PouchDB(todoDatenbankName)
@@ -15,6 +16,7 @@ export function createTodo(
     description: description,
     assignedTo: assignedTo,
     completed: completed,
+    label: label,
   })
   syncDatabases(localDB, remoteDB)
   return todo.then(response => ({
@@ -23,6 +25,7 @@ export function createTodo(
     description: description,
     assignedTo: assignedTo,
     completed: completed,
+    label: label,
   }))
 }
 
@@ -40,6 +43,7 @@ export const loadTodos = async (
         description: doc.description,
         assignedTo: doc.assignedTo,
         completed: doc.completed,
+        label: doc.label,
       } as Todo)
     }
     return todos
