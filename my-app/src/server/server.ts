@@ -13,8 +13,6 @@ import { GroupToDoListRoutes } from './GroupToDoListRoutes.ts'
 
 dotenv.config()
 
-
-
 export const couch = new NodeCouchDb({
   auth: {
     user: process.env.COUCHDB_USER,
@@ -57,7 +55,6 @@ app.use(
   '/api/',
   UserAdministrationRouter,
   TodoAdministration,
-  TodoRoutes,
   GroupToDoListRoutes,
 )
 checkAndCreateDatabases(couch, [dbName, dbNameUsers, todoDbName])
@@ -75,7 +72,5 @@ couch.listDatabases().then((dbs: string[]) => {
     )
   }
 })
-
-
 
 app.listen(4001, () => console.log('Server is running on port 4001'))

@@ -30,7 +30,7 @@ export default function SingleToDoList() {
   const [todos, setTodos] = useState<Array<Todo>>([])
   const [cookie, setCookie] = useCookies(['database'])
 
-  const [role, setRole] = useState('')
+  const [role, setRole] = useState('admin')
   useEffect(() => {
     loadTodos(id as string)
       .then((todos) => {
@@ -213,7 +213,7 @@ export default function SingleToDoList() {
               </button>
             </>
           )}
-          <TodoList todos={todos} groupListId={id} />
+          <TodoList todos={todos} groupListId={id} role={role} />
         </>
       )}
     </div>
