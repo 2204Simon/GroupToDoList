@@ -155,37 +155,36 @@ const Sidebar = () => {
       </Block>
 
       <Block>
-        <h1>To-Do-Listen</h1>
-        <div>
-          {todoListNames
-            .filter((todoListName) => todoListName.title !== undefined)
-            .map((todoListName) => (
-              <div
-                key={todoListName._id}
-                style={{ display: 'flex', justifyContent: 'space-between' }}
-              >
-                <StyledLink to={`/todoList/${todoListName._id}`}>
-                  {todoListName.title}
-                </StyledLink>
-                <button
-                  onClick={() => editTitle(todoListName._id)}
-                  style={{ width: 'auto' }}
-                >
-                  <Pen size={30} />
-                </button>
-                <button
-    onClick={() => deleteTodoList(todoListName._id)}
-    style={{ width: 'auto' }}
-  >
-    <Trash size={30} />
-  </button>
-                
-              </div>
-            ))}
+  <h1>To-Do-Listen</h1>
+  <div>
+    {todoListNames
+      .filter((todoListName) => todoListName.title !== undefined)
+      .map((todoListName) => (
+        <div
+          key={todoListName._id}
+          style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}
+        >
+          <StyledLink to={`/todoList/${todoListName._id}`}>
+            {todoListName.title}
+          </StyledLink>
+          <div style={{ display: 'flex' }}>
+            <button
+              onClick={() => editTitle(todoListName._id)}
+              style={{ width: 'auto', marginRight: '10px' }}
+            >
+              <Pen size={30} />
+            </button>
+            <button
+              onClick={() => deleteTodoList(todoListName._id)}
+              style={{ width: 'auto' }}
+            >
+              <Trash size={30} />
+            </button>
+          </div>
         </div>
-
-        {/* Hier können Sie Ihre To-Do-Liste einfügen */}
-      </Block>
+      ))}
+  </div>
+</Block>
 
       <Block>
         <StyledLink to="/register">Registrieren</StyledLink>

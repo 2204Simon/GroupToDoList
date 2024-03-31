@@ -15,7 +15,7 @@ export default function SingleToDoList() {
   const [email, setEmail] = useState('')
   const [assignedTo, setAssignedTo] = useState('')
   const [label, setLabel] = useState('Hohe Priorität')
-  const [userRole, setuUserRole] = useState('Admin')
+  const [userRole, setUserRole] = useState('admin')
   const [groupListTitle, setGroupListTitle] = useState('')
   const tomorrow = new Date()
   tomorrow.setDate(tomorrow.getDate() + 1)
@@ -23,6 +23,7 @@ export default function SingleToDoList() {
   const [todos, setTodos] = useState<Array<Todo>>([])
   const [cookie, setCookie] = useCookies(['database'])
 
+  
   useEffect(() => {
     loadTodos(id as string)
       .then((todos) => {
@@ -116,12 +117,12 @@ export default function SingleToDoList() {
           />
           <select
             value={label}
-            onChange={(e) => setLabel(e.target.value)}
-            defaultValue={'Hohe Priorität'}
+            onChange={(e) => setUserRole(e.target.value)}
+            defaultValue={'admin'}
           >
-            <option value="Admin">Admin</option>
-            <option value="Bearbeiter">Bearbeiter</option>
-            <option value="Leser">Leser</option>
+            <option value="admin">Admin</option>
+            <option value="bearbeiter">Bearbeiter</option>
+            <option value="leser">Leser</option>
           </select>
           <button
             onClick={async () => {
@@ -156,12 +157,12 @@ export default function SingleToDoList() {
                   toast.error('Fehler beim Hinzufügen der Person', {
                     autoClose: 2000,
                   })
-                } else {
+                } 
+                else if (response.status === 200) {
                   toast.success('Person hinzugefügt', { autoClose: 2000 })
-                }
               }
             }}
-          >
+            }>
             Person hinzufügen
           </button>
           <TodoList todos={todos} groupListId={id} />
