@@ -132,8 +132,7 @@ export const findRoleForTodoList = async (groupListId: string, cookie: any) => {
 
     // Find the document with type 'roles'
     const rolesDoc = allDocs.rows.find((row: any) => row.doc.type === 'roles')
-    console.log('docFromGroupListDb', rolesDoc)
-    console.log(rolesDoc.doc.member, 'member')
+
     const member = rolesDoc.doc.member.find(
       (m: { email: string; role: string }) => m.email === email,
     )
