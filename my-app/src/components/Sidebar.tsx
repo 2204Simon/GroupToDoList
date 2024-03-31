@@ -126,6 +126,9 @@ const Sidebar = () => {
     }
 
     syncDatabase()
+    loadTodoListNames(cookies, setCookie).then((todoListNames) =>
+      setTodoListNames(todoListNames),
+    )
   }, [cookies, setCookie])
 
   const [isOpen, setIsOpen] = useState(true)
