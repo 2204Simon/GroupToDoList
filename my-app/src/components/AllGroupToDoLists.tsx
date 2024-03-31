@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from 'react'
 import { GroupTodoList } from '../types/types'
+import { toast } from 'react-toastify'
+import { useNavigate } from 'react-router-dom'
 
 const AllGroupToDoLists: React.FC = () => {
   const [newTodoList, setNewTodoList] = useState({ title: '' })
   const [todoLists, setTodoLists] = useState<GroupTodoList[]>([])
+  const navigate = useNavigate()
 
   useEffect(() => {
     loadTodoLists()
@@ -11,6 +14,12 @@ const AllGroupToDoLists: React.FC = () => {
 
   const loadTodoLists = async () => {
     try {
+      // if (localStorage.getItem('database') === null) {
+      //   // sie müssen sich anmelden um eine todo liste zu erstellen
+      //   toast.error('Sie müssen sich anmelden um Ihre To-Do-Listen einzusehen!')
+      //   navigate('/login')
+      //   return
+      // }
       const response = await fetch('http://localhost:4001/api/todolists', {
         method: 'GET',
         headers: {
@@ -43,6 +52,13 @@ const AllGroupToDoLists: React.FC = () => {
     event.preventDefault()
 
     try {
+      // if (localStorage.getItem('database') === null) {
+      //   // sie müssen sich anmelden um eine todo liste zu erstellen
+      //   toast.error('Sie müssen sich anmelden um eine To-Do-Liste zu erstellen!')
+      //   navigate('/login')
+      //   return
+      // }
+      
       const response = await fetch('http://localhost:4001/api/todolists', {
         method: 'POST',
         headers: {
