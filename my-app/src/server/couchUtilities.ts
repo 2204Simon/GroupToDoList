@@ -70,13 +70,20 @@ export async function findUserByToken(token: string) {
 }
 
 export async function findUserByEmail(email: string) {
-  const selector = {
-    email: { $eq: email },
+  const query = {
+    selector: {
+      email: { $eq: email },
+    },
   }
 
   try {
-    const user = await couch.get('users', selector)
-    return user // gibt den ersten gefundenen Benutzer zurück
+    const { data: docs } = await couch.mango('users', query, {})
+    const user = docs.docs[0]
+    // Stellen Sie sicher, dass das Benutzerobjekt ein databaseId-Feld enthält
+    if (!user) {
+      throw new Error('User not found')
+    }
+    return user
   } catch (error) {
     console.error(`User with email ${email} does not exist.`)
     return null
