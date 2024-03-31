@@ -97,11 +97,15 @@ GroupToDoListRoutes.get('/todolists', async (req, res) => {
       res.status(404).json({ error: 'User not found' })
       return
     }
-    const { databaseId } = user
-    console.log('Database ID:', databaseId) // Protokollierung hinzufügen
+    const { database } = req.cookies // Extrahieren Sie die Datenbank-ID aus den Cookies
+    console.log('Database ID:', database) // Protokollierung hinzufügen
     const dbs = await couch.listDatabases()
+    if (!dbs.includes(database)) {
+      res.status(404).json({ error: 'Database not found' })
+      return
+    }
     const mangoQuery = { selector: { _id: { $gt: null } } }
-    const { data: docs } = await couch.mango(databaseId, mangoQuery)
+    const { data: docs } = await couch.mango(database, mangoQuery)
     const todoLists = docs.docs.map((doc: { _id: any; title: any }) => ({
       id: doc._id,
       title: doc.title,

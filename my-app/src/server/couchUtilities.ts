@@ -58,8 +58,8 @@ export async function findUserByToken(token: string) {
     const { data: docs } = await couch.mango('users', query, {})
     const user = docs.docs[0];
       // Stellen Sie sicher, dass das Benutzerobjekt ein databaseId-Feld enthält
-      if (!user.databaseId) {
-        throw new Error('User has no databaseId')
+      if (!user) {
+        throw new Error('User not found');
       }
       return user;
     
