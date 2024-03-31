@@ -81,6 +81,7 @@ const testTodoIds = ['1', '2']
 const Sidebar = () => {
   const { isLoggedIn, setLoggedIn } = useContext(AuthContext)
   const [cookies, setCookie] = useCookies(['database'])
+  const [cookiesToken, setCookieToken] = useCookies(['token'])
   const navigate = useNavigate()
 
   const [todoListNames, setTodoListNames] = useState<
@@ -180,25 +181,24 @@ const Sidebar = () => {
       <Block>
         <StyledLink to="/register">Registrieren</StyledLink>
       </Block>
-      {isLoggedIn ? (
-        <LogoutButton
-          onClick={() => {
-            setLoggedIn(false)
-            toast.success('Erfolgreich ausgeloggt', {
-              autoClose: 2000,
-            })
-            // token löschen
-            localStorage.removeItem('token')
-            navigate('/login')
-          }}
-        >
-          Ausloggen
-        </LogoutButton>
-      ) : (
-        <LoggedInButton onClick={() => navigate('/login')}>
-          Einloggen
-        </LoggedInButton>
-      )}
+      {cookiesToken.token ? (
+  <LogoutButton
+    onClick={() => {
+      setLoggedIn(false)
+      toast.success('Erfolgreich ausgeloggt', {
+        autoClose: 2000,
+      })
+      navigate('/login')
+      
+    }}
+  >
+    Ausloggen
+  </LogoutButton>
+) : (
+  <LoggedInButton onClick={() => navigate('/login')}>
+    Einloggen
+  </LoggedInButton>
+)}
     </SidebarWrapper>
   )
 }
