@@ -83,7 +83,7 @@ const testTodoIds = ['1', '2']
 const Sidebar = () => {
   const { isLoggedIn, setLoggedIn } = useContext(AuthContext)
   const [cookies, setCookie] = useCookies(['database'])
-  const [isEding , setIsEditing] = useState(false)
+  const [isEding, setIsEditing] = useState(false)
   const [cookiesToken, setCookieToken] = useCookies(['token'])
   const navigate = useNavigate()
   const [role, setRole] = useState('admin')
@@ -138,19 +138,17 @@ const Sidebar = () => {
   const toggleSidebar = () => {
     setIsOpen(!isOpen)
   }
- 
 
   return (
     <SidebarWrapper isOpen={isOpen}>
       {/* <CloseButton onClick={toggleSidebar}>
         <XCircle size={24} />
       </CloseButton> */}
-  
+
       <Block>
         <h1>Navigationsmenü</h1>
         <StyledLink to="/home">Home</StyledLink>
       </Block>
-  
       <Block>
         <h1>To-Do-Listen</h1>
         <div>
@@ -166,26 +164,27 @@ const Sidebar = () => {
                 }}
               >
                 {isEding ? (
-  <>
-    <input
-      type="text"
-      value={todoListName.title}
-      style={{color: 'black'}}
-      onChange={(e) => {
-        todoListName.title = e.target.value
-        setTodoListNames([...todoListNames])
-      }}
-    />
-    <button style={{ width: 'auto' }}
-      onClick={() => {
-        setIsEditing(false)
-        // Hier können Sie die Funktion zum Speichern der Änderungen aufrufen
-      }}
-    >
-      <Floppy size={30} />
-    </button>
-  </>
-) : (
+                  <>
+                    <input
+                      type="text"
+                      value={todoListName.title}
+                      style={{ color: 'black' }}
+                      onChange={(e) => {
+                        todoListName.title = e.target.value
+                        setTodoListNames([...todoListNames])
+                      }}
+                    />
+                    <button
+                      style={{ width: 'auto' }}
+                      onClick={() => {
+                        setIsEditing(false)
+                        // Hier können Sie die Funktion zum Speichern der Änderungen aufrufen
+                      }}
+                    >
+                      <Floppy size={30} />
+                    </button>
+                  </>
+                ) : (
                   <>
                     <StyledLink to={`/todoList/${todoListName._id}`}>
                       {todoListName.title}
@@ -193,18 +192,24 @@ const Sidebar = () => {
                     <div style={{ display: 'flex' }}>
                       {(role === 'admin' || role === 'bearbeiter') && (
                         <button
-                        onClick={() => {
-                          setIsEditing(true)
-                          editTodolistTitle(todoListName._id, todoListName.title, cookies)
-                        }}
-                        style={{ width: 'auto', marginRight: '10px' }}
-                      >
-                        <Pen size={30} />
-                      </button>
+                          onClick={() => {
+                            setIsEditing(true)
+                            editTodolistTitle(
+                              todoListName._id,
+                              todoListName.title,
+                              cookies,
+                            )
+                          }}
+                          style={{ width: 'auto', marginRight: '10px' }}
+                        >
+                          <Pen size={30} />
+                        </button>
                       )}
                       {(role === 'admin' || role === 'bearbeiter') && (
                         <button
-                          onClick={() => deleteTodoList(todoListName._id, cookies)}
+                          onClick={() =>
+                            deleteTodoList(todoListName._id, cookies)
+                          }
                           style={{ width: 'auto' }}
                         >
                           <Trash size={30} />
@@ -216,9 +221,10 @@ const Sidebar = () => {
               </div>
             ))}
         </div>
-        <Block>
-          <StyledLink to="/register">Registrieren</StyledLink>
-        </Block>
+        <br />
+        <br />
+        <StyledLink to="/register">Registrieren</StyledLink>
+
         {cookiesToken.token ? (
           <LogoutButton
             onClick={() => {
@@ -240,4 +246,4 @@ const Sidebar = () => {
     </SidebarWrapper>
   )
 }
-  export default Sidebar
+export default Sidebar
