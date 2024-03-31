@@ -9,6 +9,8 @@ import { AuthContext } from '../AuthContext'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import { Pen, Trash } from 'phosphor-react'
+import { deleteTodoList, editTodolistTitle } from './todofunctions'
+import { Floppy } from 'react-bootstrap-icons'
 
 const SidebarWrapper = styled.div<{ isOpen: boolean }>`
   width: ${(props) => (props.isOpen ? '25vw' : '0')};
@@ -81,9 +83,10 @@ const testTodoIds = ['1', '2']
 const Sidebar = () => {
   const { isLoggedIn, setLoggedIn } = useContext(AuthContext)
   const [cookies, setCookie] = useCookies(['database'])
+  const [isEding , setIsEditing] = useState(false)
   const [cookiesToken, setCookieToken] = useCookies(['token'])
   const navigate = useNavigate()
-  const [role, setRole] = useState('')
+  const [role, setRole] = useState('admin')
   const [todoListNames, setTodoListNames] = useState<
     Array<TodoListPouchListing>
   >([])
@@ -135,25 +138,19 @@ const Sidebar = () => {
   const toggleSidebar = () => {
     setIsOpen(!isOpen)
   }
-  function editTitle(_id: string): void {
-    throw new Error('Function not implemented.') // TODO: anbinden!!
-  }
-
-  function deleteTodoList(_id: string): void {
-    throw new Error('Function not implemented.')
-  }
+ 
 
   return (
     <SidebarWrapper isOpen={isOpen}>
       {/* <CloseButton onClick={toggleSidebar}>
         <XCircle size={24} />
       </CloseButton> */}
-
+  
       <Block>
         <h1>Navigationsmenü</h1>
         <StyledLink to="/home">Home</StyledLink>
       </Block>
-
+  
       <Block>
         <h1>To-Do-Listen</h1>
         <div>
@@ -168,54 +165,79 @@ const Sidebar = () => {
                   alignItems: 'center',
                 }}
               >
-                <StyledLink to={`/todoList/${todoListName._id}`}>
-                  {todoListName.title}
-                </StyledLink>
-                <div style={{ display: 'flex' }}>
-                  {(role === 'admin' || role === 'bearbeiter') && (
-                    <button
-                      onClick={() => editTitle(todoListName._id)}
-                      style={{ width: 'auto', marginRight: '10px' }}
-                    >
-                      <Pen size={30} />
-                    </button>
-                  )}
-                  {(role === 'admin' || role === 'bearbeiter') && (
-                    <button
-                      onClick={() => deleteTodoList(todoListName._id)}
-                      style={{ width: 'auto' }}
-                    >
-                      <Trash size={30} />
-                    </button>
-                  )}
-                </div>
+                {isEding ? (
+  <>
+    <input
+      type="text"
+      value={todoListName.title}
+      style={{color: 'black'}}
+      onChange={(e) => {
+        todoListName.title = e.target.value
+        setTodoListNames([...todoListNames])
+      }}
+    />
+    <button style={{ width: 'auto' }}
+      onClick={() => {
+        setIsEditing(false)
+        // Hier können Sie die Funktion zum Speichern der Änderungen aufrufen
+      }}
+    >
+      <Floppy size={30} />
+    </button>
+  </>
+) : (
+                  <>
+                    <StyledLink to={`/todoList/${todoListName._id}`}>
+                      {todoListName.title}
+                    </StyledLink>
+                    <div style={{ display: 'flex' }}>
+                      {(role === 'admin' || role === 'bearbeiter') && (
+                        <button
+                        onClick={() => {
+                          setIsEditing(true)
+                          editTodolistTitle(todoListName._id, todoListName.title, cookies)
+                        }}
+                        style={{ width: 'auto', marginRight: '10px' }}
+                      >
+                        <Pen size={30} />
+                      </button>
+                      )}
+                      {(role === 'admin' || role === 'bearbeiter') && (
+                        <button
+                          onClick={() => deleteTodoList(todoListName._id, cookies)}
+                          style={{ width: 'auto' }}
+                        >
+                          <Trash size={30} />
+                        </button>
+                      )}
+                    </div>
+                  </>
+                )}
               </div>
             ))}
         </div>
+        <Block>
+          <StyledLink to="/register">Registrieren</StyledLink>
+        </Block>
+        {cookiesToken.token ? (
+          <LogoutButton
+            onClick={() => {
+              setLoggedIn(false)
+              toast.success('Erfolgreich ausgeloggt', {
+                autoClose: 2000,
+              })
+              navigate('/login')
+            }}
+          >
+            Ausloggen
+          </LogoutButton>
+        ) : (
+          <LoggedInButton onClick={() => navigate('/login')}>
+            Einloggen
+          </LoggedInButton>
+        )}
       </Block>
-
-      <Block>
-        <StyledLink to="/register">Registrieren</StyledLink>
-      </Block>
-      {cookiesToken.token ? (
-        <LogoutButton
-          onClick={() => {
-            setLoggedIn(false)
-            toast.success('Erfolgreich ausgeloggt', {
-              autoClose: 2000,
-            })
-            navigate('/login')
-          }}
-        >
-          Ausloggen
-        </LogoutButton>
-      ) : (
-        <LoggedInButton onClick={() => navigate('/login')}>
-          Einloggen
-        </LoggedInButton>
-      )}
     </SidebarWrapper>
   )
 }
-
-export default Sidebar
+  export default Sidebar
