@@ -10,7 +10,6 @@ import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import { Pen, Trash } from 'phosphor-react'
 
-const [role, setRole] = useState('')
 const SidebarWrapper = styled.div<{ isOpen: boolean }>`
   width: ${(props) => (props.isOpen ? '25vw' : '0')};
   transition: 0.3s;
@@ -84,7 +83,7 @@ const Sidebar = () => {
   const [cookies, setCookie] = useCookies(['database'])
   const [cookiesToken, setCookieToken] = useCookies(['token'])
   const navigate = useNavigate()
-
+  const [role, setRole] = useState('')
   const [todoListNames, setTodoListNames] = useState<
     Array<TodoListPouchListing>
   >([])
@@ -156,62 +155,65 @@ const Sidebar = () => {
       </Block>
 
       <Block>
-  <h1>To-Do-Listen</h1>
-  <div>
-    {todoListNames
-      .filter((todoListName) => todoListName.title !== undefined)
-      .map((todoListName) => (
-        <div
-          key={todoListName._id}
-          style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}
-        >
-          <StyledLink to={`/todoList/${todoListName._id}`}>
-            {todoListName.title}
-          </StyledLink>
-          <div style={{ display: 'flex' }}>
-            {(role === 'admin' || role === 'bearbeiter') && (
-              <button
-                onClick={() => editTitle(todoListName._id)}
-                style={{ width: 'auto', marginRight: '10px' }}
+        <h1>To-Do-Listen</h1>
+        <div>
+          {todoListNames
+            .filter((todoListName) => todoListName.title !== undefined)
+            .map((todoListName) => (
+              <div
+                key={todoListName._id}
+                style={{
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                }}
               >
-                <Pen size={30} />
-              </button>
-            )}
-            {(role === 'admin' || role === 'bearbeiter') && (
-              <button
-                onClick={() => deleteTodoList(todoListName._id)}
-                style={{ width: 'auto' }}
-              >
-                <Trash size={30} />
-              </button>
-            )}
-          </div>
+                <StyledLink to={`/todoList/${todoListName._id}`}>
+                  {todoListName.title}
+                </StyledLink>
+                <div style={{ display: 'flex' }}>
+                  {(role === 'admin' || role === 'bearbeiter') && (
+                    <button
+                      onClick={() => editTitle(todoListName._id)}
+                      style={{ width: 'auto', marginRight: '10px' }}
+                    >
+                      <Pen size={30} />
+                    </button>
+                  )}
+                  {(role === 'admin' || role === 'bearbeiter') && (
+                    <button
+                      onClick={() => deleteTodoList(todoListName._id)}
+                      style={{ width: 'auto' }}
+                    >
+                      <Trash size={30} />
+                    </button>
+                  )}
+                </div>
+              </div>
+            ))}
         </div>
-      ))}
-  </div>
-</Block>
+      </Block>
 
       <Block>
         <StyledLink to="/register">Registrieren</StyledLink>
       </Block>
       {cookiesToken.token ? (
-  <LogoutButton
-    onClick={() => {
-      setLoggedIn(false)
-      toast.success('Erfolgreich ausgeloggt', {
-        autoClose: 2000,
-      })
-      navigate('/login')
-      
-    }}
-  >
-    Ausloggen
-  </LogoutButton>
-) : (
-  <LoggedInButton onClick={() => navigate('/login')}>
-    Einloggen
-  </LoggedInButton>
-)}
+        <LogoutButton
+          onClick={() => {
+            setLoggedIn(false)
+            toast.success('Erfolgreich ausgeloggt', {
+              autoClose: 2000,
+            })
+            navigate('/login')
+          }}
+        >
+          Ausloggen
+        </LogoutButton>
+      ) : (
+        <LoggedInButton onClick={() => navigate('/login')}>
+          Einloggen
+        </LoggedInButton>
+      )}
     </SidebarWrapper>
   )
 }
