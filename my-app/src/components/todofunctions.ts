@@ -39,6 +39,12 @@ export const loadTodos = async (
   todoDatenbankName: string,
 ): Promise<Array<Todo>> => {
   const localDB = new PouchDB(todoDatenbankName)
+  // syncDatabases(
+  //   localDB,
+  //   new PouchDB(
+  //     `http://${encodeURIComponent('admin')}:${encodeURIComponent('12345')}@localhost:5984/${todoDatenbankName}`,
+  //   ),
+  // )
   const allDocs = await localDB.allDocs({ include_docs: true })
   return allDocs.rows.reduce((todos, row) => {
     const doc = row.doc as TodoDocument

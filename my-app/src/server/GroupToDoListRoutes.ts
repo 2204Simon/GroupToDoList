@@ -1,8 +1,6 @@
 import express from 'express'
 import { couch } from './server.ts' // Importieren Sie die CouchDB-Instanz aus Ihrer Hauptserverdatei
 import { v4 as uuidv4 } from 'uuid'
-import { validate as isUuid } from 'uuid'
-import { getUserIdFromToken } from './jwtMiddleware.ts'
 import {
   addMemberToRole,
   findUserByEmail,
