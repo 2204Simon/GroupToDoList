@@ -4,6 +4,7 @@ import { v4 as uuidv4 } from 'uuid'
 import { validate as isUuid } from 'uuid'
 import { getUserIdFromToken } from './jwtMiddleware.ts'
 import {
+  addMemberToRole,
   findUserByEmail,
   findUserByToken,
   publicDocumentsCouchDB,
@@ -94,16 +95,13 @@ GroupToDoListRoutes.post('/inviteTodoLists', async (req, res) => {
       res.status(404).json({ error: 'User not found' })
       return
     }
-    const member = [{ email: user.email, role }]
+
     await couch.insert(user.databaseId, {
       _id: groupListId,
       title,
       groupListId,
     })
-    await couch.insert(groupListId, {
-      member,
-      type: 'roles',
-    })
+    await addMemberToRole(email, role, groupListId)
   } catch (err) {
     console.error(err)
     res.status(500).json({ error: 'Internal Server Error' })
@@ -122,7 +120,7 @@ GroupToDoListRoutes.put('/inviteTodoLists', async (req, res) => {
     const groupList = await couch.find(data.databaseId, groupListId)
     const singlemember = { email: data.email, role: 'member' }
     groupList.data.member.push(singlemember)
-
+    console.log(groupList.data.member)
     // Save the updated group list back to the database
     await couch.update(data.databaseId, groupListId, groupList)
   } catch (err) {
