@@ -1,5 +1,10 @@
 import { useParams } from 'react-router-dom'
-import { createTodo, getGroupListName, loadTodos } from './todofunctions'
+import {
+  createTodo,
+  findRoleForTodoList,
+  getGroupListName,
+  loadTodos,
+} from './todofunctions'
 import { useEffect, useState } from 'react'
 import { Todo } from '../types/types'
 import TodoList from './ToDoList'
@@ -22,7 +27,7 @@ export default function SingleToDoList() {
   const [dueDate, setDueDate] = useState<Date>(tomorrow)
   const [todos, setTodos] = useState<Array<Todo>>([])
   const [cookie, setCookie] = useCookies(['database'])
-
+  const [role, setRole] = useState('')
   useEffect(() => {
     loadTodos(id as string)
       .then((todos) => {
@@ -35,6 +40,12 @@ export default function SingleToDoList() {
     getGroupListName(id as string, cookie)
       .then((title) => {
         setGroupListTitle(title)
+      })
+      .catch(console.error)
+    findRoleForTodoList(id as string, cookie)
+      .then((role: string) => {
+        setRole(role)
+        console.log(role)
       })
       .catch(console.error)
   }, [id, cookie])

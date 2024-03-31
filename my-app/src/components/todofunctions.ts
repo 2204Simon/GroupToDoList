@@ -116,8 +116,37 @@ export const getGroupListName = async (groupListId: string, cookie: any) => {
     return null
   }
 }
+export const findRoleForTodoList = async (groupListId: string, cookie: any) => {
+  try {
+    const localDB = new PouchDB(cookie.database)
 
-const syncDatabases = (
+    const localGroupListDb = new PouchDB(groupListId)
+
+    // Get the document from the localDB
+    const docFromLocalDB: any = await localDB.get(groupListId)
+
+    const email = docFromLocalDB.email
+
+    // Get the document from the localGroupListDb
+    const allDocs: any = await localGroupListDb.allDocs({ include_docs: true })
+
+    // Find the document with type 'roles'
+    const rolesDoc = allDocs.rows.find((row: any) => row.doc.type === 'roles')
+    console.log('docFromGroupListDb', rolesDoc)
+    console.log(rolesDoc.doc.member, 'member')
+    const member = rolesDoc.doc.member.find(
+      (m: { email: string; role: string }) => m.email === email,
+    )
+    const role = member ? member.role : null
+
+    return role
+  } catch (error) {
+    console.error(`Error getting document: ${error}`)
+    return null
+  }
+}
+
+export const syncDatabases = (
   localDB: PouchDB.Database,
   remoteDB: PouchDB.Database,
 ) => {
