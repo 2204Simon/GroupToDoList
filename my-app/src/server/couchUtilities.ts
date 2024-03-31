@@ -102,7 +102,7 @@ export async function addMemberToRole(
       console.error(`User with email ${userEmail} does not exist.`)
       return null
     }
-    console.log('user member find')
+    console.log('user member find', role)
     const query = {
       selector: {
         type: { $eq: 'roles' },

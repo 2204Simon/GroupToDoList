@@ -21,7 +21,7 @@ export default function SingleToDoList() {
   const [email, setEmail] = useState('')
   const [assignedTo, setAssignedTo] = useState('')
   const [label, setLabel] = useState('Hohe Priorität')
-  const [userRole, setUserRole] = useState('')
+  const [userRole, setUserRole] = useState('admin')
   const [groupListTitle, setGroupListTitle] = useState('')
   const [cookies] = useCookies(['database'])
   const tomorrow = new Date()
@@ -48,17 +48,21 @@ export default function SingleToDoList() {
       localDB: PouchDB.Database,
       remoteDB: PouchDB.Database,
     ) => {
+      console.log('syncing databases')
       await localDB.sync(remoteDB, {
-        live: true,
+        live: false,
         retry: true,
       })
+      console.log('databases synced')
     }
     syncDatabases(localDB, remoteDB).then(() => {
       getGroupListName(id as string, cookie)
         .then((title) => {
+          console.log(title)
+
           setGroupListTitle(title)
         })
-        .catch(console.error)
+        .catch((error) => console.error('error', error))
       findRoleForTodoList(id as string, cookie)
         .then((role: string) => {
           setRole(role)
@@ -167,6 +171,7 @@ export default function SingleToDoList() {
               </select>
               <button
                 onClick={async () => {
+                  console.log(email, userRole, groupListTitle, id)
                   if (navigator.onLine === false) {
                     toast.error('Diese funktion nur mit Internetverbindung', {
                       autoClose: 2000,
@@ -186,9 +191,9 @@ export default function SingleToDoList() {
                         },
                         body: JSON.stringify({
                           email,
-                          groupListId: id, // Sie müssen diese Variable definieren
                           role: userRole, // Sie müssen diese Variable definieren
                           title: groupListTitle, // Sie müssen diese Variable definieren
+                          groupListId: id, // Sie müssen diese Variable definieren
                         }),
                         credentials: 'include',
                       },
