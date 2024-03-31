@@ -88,33 +88,34 @@ const Sidebar = () => {
     Array<TodoListPouchListing>
   >([])
   useEffect(() => {
-    const loadTodoListNames = async (
-      cookies: any,
-      setCookie: any,
-    ): Promise<Array<TodoListPouchListing>> => {
+    const syncDatabase = async () => {
       const remoteDB = new PouchDB(
         `http://${encodeURIComponent('admin')}:${encodeURIComponent('12345')}@localhost:5984/${cookies.database}`,
       )
-      remoteDB.info().then((info) => {
-        console.log('info', info)
-      })
       const localDB = new PouchDB(cookies.database)
+
       localDB
         .sync(remoteDB, {
           live: true,
           retry: true,
         })
-        .then((sync) => {
-          console.log('sync', sync)
+        .on('change', async () => {
+          const todoListNames = await loadTodoListNames(cookies, setCookie)
+          setTodoListNames(todoListNames)
         })
         .catch((error) => {
           console.log('error', error)
         })
+    }
 
+    const loadTodoListNames = async (
+      cookies: any,
+      setCookie: any,
+    ): Promise<Array<TodoListPouchListing>> => {
+      const localDB = new PouchDB(cookies.database)
       const response = await localDB.allDocs({
         include_docs: true,
       })
-      console.log('response', response)
 
       const todoListNames = response.rows.map((row: any) => ({
         dbName: row.doc.dbName,
@@ -124,13 +125,7 @@ const Sidebar = () => {
       return todoListNames
     }
 
-    const fetchGroupNames = async () => {
-      const groupNames = await loadTodoListNames(cookies, setCookie)
-      setTodoListNames(groupNames)
-      console.log(groupNames, 'groupNames')
-    }
-
-    fetchGroupNames()
+    syncDatabase()
   }, [cookies, setCookie])
 
   const [isOpen, setIsOpen] = useState(true)
