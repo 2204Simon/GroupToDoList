@@ -109,6 +109,31 @@ export const completeTodo = async (
   )
 }
 
+export const editTodolistTitle = async ( _id: string, title: string, cookie: any) => {
+  const localDB = new PouchDB(cookie.database)
+  try {
+    const doc: any = await localDB.get(_id)
+    doc.title = title
+    await localDB.put(doc)
+    return title
+  } catch (error) {
+    console.error(`Error getting document: ${error}`)
+    return null
+  }
+}
+
+export const deleteTodoList = async ( _id: string, cookie: any) => {
+  const localDB = new PouchDB(cookie.database)
+  try {
+    const doc: any = await localDB.get(_id)
+    await localDB.remove(doc)
+    return true
+  } catch (error) {
+    console.error(`Error getting document: ${error}`)
+    return false
+  }
+}
+
 export const getGroupListName = async (groupListId: string, cookie: any) => {
   try {
     console.log('getGroupListName', groupListId, cookie)
