@@ -1,5 +1,10 @@
 import { useParams } from 'react-router-dom'
-import { createTodo, getGroupListName, loadTodos } from './todofunctions'
+import {
+  createTodo,
+  findRoleForTodoList,
+  getGroupListName,
+  loadTodos,
+} from './todofunctions'
 import { useEffect, useState } from 'react'
 import { Todo } from '../types/types'
 import TodoList from './ToDoList'
@@ -22,9 +27,8 @@ export default function SingleToDoList() {
   const [dueDate, setDueDate] = useState<Date>(tomorrow)
   const [todos, setTodos] = useState<Array<Todo>>([])
   const [cookie, setCookie] = useCookies(['database'])
-
-  const role = 'leser'
-
+  
+  const [role, setRole] = useState('')
   useEffect(() => {
     loadTodos(id as string)
       .then((todos) => {
@@ -37,6 +41,12 @@ export default function SingleToDoList() {
     getGroupListName(id as string, cookie)
       .then((title) => {
         setGroupListTitle(title)
+      })
+      .catch(console.error)
+    findRoleForTodoList(id as string, cookie)
+      .then((role: string) => {
+        setRole(role)
+        console.log(role)
       })
       .catch(console.error)
   }, [id, cookie])
@@ -168,12 +178,12 @@ export default function SingleToDoList() {
                   toast.error('Fehler beim Hinzufügen der Person', {
                     autoClose: 2000,
                   })
-                } 
-                else if (response.status === 200) {
+                } else if (response.status === 200) {
                   toast.success('Person hinzugefügt', { autoClose: 2000 })
+                }
               }
             }}
-            }>
+          >
             Person hinzufügen
           </button>
           </>
