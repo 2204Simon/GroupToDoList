@@ -161,7 +161,7 @@ export default function SingleToDoList() {
                 onChange={(e) => setEmail(e.target.value)}
               />
               <select
-                value={label}
+                value={userRole}
                 onChange={(e) => setUserRole(e.target.value)}
                 defaultValue={'admin'}
               >
