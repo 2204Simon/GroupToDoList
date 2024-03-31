@@ -6,7 +6,7 @@ import { toast } from 'react-toastify';
 import ReactDatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 
-const role = 'bearbeiter'
+const [role, setRole] = useState('')
 interface TodoListItemActions {
   onDelete: (id: string) => void,
   onEdit: (id: string, updatedTodo: Todo) => void;
