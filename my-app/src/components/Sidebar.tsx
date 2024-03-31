@@ -10,7 +10,7 @@ import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import { Pen, Trash } from 'phosphor-react'
 
-const role = 'admin'
+const [role, setRole] = useState('')
 const SidebarWrapper = styled.div<{ isOpen: boolean }>`
   width: ${(props) => (props.isOpen ? '25vw' : '0')};
   transition: 0.3s;
