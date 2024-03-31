@@ -3,6 +3,7 @@ import { v4 as uuidv4 } from 'uuid'
 import bcrypt from 'bcrypt'
 import { couch } from './server.ts'
 import { generateAccessToken } from './jwtMiddleware.ts'
+import { findUserByToken, publicDocumentsCouchDB } from './couchUtilities.ts'
 
 const dbName = 'users' // Change this to your user database name
 export const UserAdministrationRouter = express.Router()
@@ -16,17 +17,28 @@ UserAdministrationRouter.post('/users', async (req, res) => {
       return res.status(400).json({ error: 'Invalid password' })
     }
     const hashedPassword = await bcrypt.hash(password, 10) // Hash the password
+
+    // Insert the new user into the database
+    const databaseId = uuidv4()
+    console.log('Database ID:', databaseId)
+    const dbGroupListName = `db_${databaseId}` // replace with your database name
+    await couch.createDatabase(dbGroupListName)
+    await publicDocumentsCouchDB(dbGroupListName)
     const user = await couch.insert(dbName, {
       username,
       email,
       password: hashedPassword, // Store the hashed password
       userId: uuidv4(),
-      groupTodoLists: [],
+      databaseId: dbGroupListName,
     })
     console.log(user.data)
     const token = generateAccessToken(user.data.id) // Generate a new token for the user
     console.log(token, 'token2')
-
+    res.cookie('database', dbGroupListName, {
+      httpOnly: false,
+      sameSite: 'none',
+      secure: true,
+    })
     res.cookie('token', token, { httpOnly: false }) // Store the token in a cookie
     res.status(201).json(user.data)
   } catch (err) {
@@ -58,6 +70,11 @@ UserAdministrationRouter.post('/login', async (req, res) => {
     if (match) {
       const token = generateAccessToken(user.userId) // Generate a new token for the user
       res.cookie('token', token) // Store the token in a cookie
+      res.cookie('database', user.databaseId, {
+        httpOnly: false,
+        sameSite: 'none',
+        secure: true,
+      })
       res.json({ message: 'Login successful' })
     } else {
       res.status(400).json({ error: 'Invalid password' })

@@ -46,29 +46,26 @@ export async function publicDocumentsCouchDB(dbName: string) {
 
 export async function findUserByToken(token: string) {
   const userId: any = getUserIdFromToken(token)
-  console.log(userId, 'userId')
-  console.log('Tokentoken', userId.userId)
 
   try {
     const query = {
       selector: {
         userId: { $eq: userId.userId },
-      }
+      },
     }
     const { data: docs } = await couch.mango('users', query, {})
-    const user = docs.docs[0];
-      // Stellen Sie sicher, dass das Benutzerobjekt ein databaseId-Feld enthält
-      if (!user) {
-        throw new Error('User not found');
-      }
-      return user;
-    
-  } catch (error: any) {
-    console.error(error);
-    if (error.code === 'EDOCMISSING') {
-      console.error(`Document with id ${userId.userId} does not exist.`);
+    const user = docs.docs[0]
+    // Stellen Sie sicher, dass das Benutzerobjekt ein databaseId-Feld enthält
+    if (!user) {
+      throw new Error('User not found')
     }
-    return null;
+    return user
+  } catch (error: any) {
+    console.error(error)
+    if (error.code === 'EDOCMISSING') {
+      console.error(`Document with id ${userId.userId} does not exist.`)
+    }
+    return null
   }
 }
 
@@ -81,7 +78,7 @@ export async function findUserByEmail(email: string) {
     const user = await couch.get('users', selector)
     return user // gibt den ersten gefundenen Benutzer zurück
   } catch (error) {
-    console.error(`User with email ${email} does not exist.`);
-    return null;
+    console.error(`User with email ${email} does not exist.`)
+    return null
   }
 }

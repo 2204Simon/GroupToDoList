@@ -17,48 +17,22 @@ GroupToDoListRoutes.post('/todolists', async (req, res) => {
   try {
     const { title } = req.body
     const { database, token } = req.cookies
+
     const user = await findUserByToken(req.cookies.token)
+    const userDatabaseId = user.databaseId
     if (!user) {
       res.status(404).json({ error: 'User not found' })
       return
     }
-    const id = uuidv4() // Generieren Sie eine eindeutige ID
-    const dbName = database ? database : `db_${id}`
-    const dbs = await couch.listDatabases()
+    // const id = uuidv4() // Generieren Sie eine eindeutige ID
     const groupListId = `gtd_${uuidv4()}`
-
-    if (!dbs.includes(database) || !database) {
-      const databaseId = uuidv4()
-      console.log('Database ID:', databaseId)
-      const dbName = `db_${databaseId}` // replace with your database name
-      await couch.createDatabase(dbName)
-      await publicDocumentsCouchDB(dbName)
-      const dbGroupTodoName = `${groupListId}`
-      await couch.createDatabase(dbGroupTodoName)
-      // Update the security settings
-      await publicDocumentsCouchDB(dbGroupTodoName)
-      const user = await findUserByToken(req.cookies.token)
-      const member = [{ email: user.email, role: 'admin' }]
-      await publicDocumentsCouchDB(dbName)
-      await couch.insert(database, {
-        _id: groupListId,
-        title,
-        member,
-        dbGroupTodoName,
-      })
-
-      const { data, headers, status } = await couch.get('users', user._id)
-
-
-console.log(user._id, data._rev);
-const updatedUser = {
-  _id: user._id,
-  _rev: data._rev,
-  ...data,
-  databaseId: dbName,
-}
-await couch.insert('users', updatedUser)
-      res.cookie('database', `db_${databaseId}`, {
+    console.log('database:', database)
+    console.log('UserdbId', user.databaseId)
+    if (user.databaseId !== database) {
+      console.log('Database IDS:', database) // Protokollierung hinzufügen
+      console.log('databaseId !== database', user.databaseId, database)
+      //updateCookie
+      res.cookie('database', userDatabaseId, {
         httpOnly: false,
         sameSite: 'none',
         secure: true,
@@ -70,20 +44,16 @@ await couch.insert('users', updatedUser)
       await couch.createDatabase(dbName)
       const member = [{ email: user.email, role: 'admin' }]
       await publicDocumentsCouchDB(dbName)
-      await couch.insert(database, {
+      await couch.insert(userDatabaseId, {
         _id: groupListId,
         title,
         dbName,
         member,
       })
-    }
-
-    if (!token) {
-      res.status(401).json({ error: 'Unauthorized' })
+      res.json({ message: 'Todo-Liste erfolgreich erstellt', groupListId }) // Senden Sie die ID zurück
       return
     }
-
-    res.json({ message: 'Todo-Liste erfolgreich erstellt', id }) // Senden Sie die ID zurück
+    res.status(404).json({ error: 'Database not found' })
   } catch (err) {
     console.error(err)
     res.status(500).json({ error: 'Internal Server Error' })
