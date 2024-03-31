@@ -10,6 +10,7 @@ interface TodoListItemActions {
   onDelete: (id: string) => void
   onEdit: (id: string, updatedTodo: Todo) => void
   onComplete: (id: string, isCompleted: boolean) => void
+  role: string
 }
 
 const TodoListItem: React.FC<TodoListItemProps & TodoListItemActions> = ({
@@ -17,12 +18,13 @@ const TodoListItem: React.FC<TodoListItemProps & TodoListItemActions> = ({
   onDelete,
   onEdit,
   onComplete,
+  role,
 }) => {
   const [isEditing, setIsEditing] = useState(false)
   const [updatedTodo, setUpdatedTodo] = useState(todo)
   const [isCompleted, setIsCompleted] = useState(todo.completed) // Zustand für erledigte Todos
 
-  const [role, setRole] = useState('')
+  // const [role, setRole] = useState('')
 
   const handleDelete = () => {
     toast.error('To-Do gelöscht')
