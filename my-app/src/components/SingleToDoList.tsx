@@ -5,6 +5,7 @@ import {
   getGroupListName,
   loadTodos,
 } from './todofunctions'
+import PouchDB from 'pouchdb-browser'
 import { useEffect, useState } from 'react'
 import { Todo } from '../types/types'
 import TodoList from './ToDoList'
@@ -22,13 +23,14 @@ export default function SingleToDoList() {
   const [label, setLabel] = useState('Hohe Priorität')
   const [userRole, setUserRole] = useState('admin')
   const [groupListTitle, setGroupListTitle] = useState('')
+  const [cookies] = useCookies(['database'])
   const tomorrow = new Date()
   tomorrow.setDate(tomorrow.getDate() + 1)
   const [dueDate, setDueDate] = useState<Date>(tomorrow)
   const [todos, setTodos] = useState<Array<Todo>>([])
   const [cookie, setCookie] = useCookies(['database'])
-  
-  const [role, setRole] = useState('')
+
+  const [role, setRole] = useState('admin')
   useEffect(() => {
     loadTodos(id as string)
       .then((todos) => {
@@ -38,6 +40,20 @@ export default function SingleToDoList() {
   }, [id, todos])
 
   useEffect(() => {
+    const localDB = new PouchDB(id)
+    const remoteDB = new PouchDB(
+      `http://${encodeURIComponent('admin')}:${encodeURIComponent('12345')}@localhost:5984/${cookies.database}`,
+    )
+    const syncDatabases = async (
+      localDB: PouchDB.Database,
+      remoteDB: PouchDB.Database,
+    ) => {
+      localDB.sync(remoteDB, {
+        live: true,
+        retry: true,
+      })
+    }
+    syncDatabases(localDB, remoteDB)
     getGroupListName(id as string, cookie)
       .then((title) => {
         setGroupListTitle(title)
@@ -59,7 +75,7 @@ export default function SingleToDoList() {
         <>
           <h1>{groupListTitle}</h1>
           <br />
-          {(role === 'admin' || role === 'bearbeiter' ) && (
+          {(role === 'admin' || role === 'bearbeiter') && (
             <>
               <input
                 type="text"
@@ -101,92 +117,95 @@ export default function SingleToDoList() {
                   placeholderText="Fälligkeitsdatum"
                 />
               )}
-          <button
-            onClick={async () => {
-              if (title === '' || description === '') {
-                toast.error('Titel und Beschreibung dürfen nicht leer sein', {
-                  autoClose: 2000,
-                })
-              } else {
-                const newTodo = await createTodo(
-                  id,
-                  title,
-                  description,
-                  assignedTo,
-                  false,
-                  label,
-                  dueDate as Date,
-                )
-                setTodos((prevTodos) => [...prevTodos, newTodo])
-                toast.success('To-Do hinzugefügt', { autoClose: 2000 })
-              }
-            }}
-          >
-            Todo hinzufügen
-          </button>{' '}
-          <br />
-          </>
+              <button
+                onClick={async () => {
+                  if (title === '' || description === '') {
+                    toast.error(
+                      'Titel und Beschreibung dürfen nicht leer sein',
+                      {
+                        autoClose: 2000,
+                      },
+                    )
+                  } else {
+                    const newTodo = await createTodo(
+                      id,
+                      title,
+                      description,
+                      assignedTo,
+                      false,
+                      label,
+                      dueDate as Date,
+                    )
+                    setTodos((prevTodos) => [...prevTodos, newTodo])
+                    toast.success('To-Do hinzugefügt', { autoClose: 2000 })
+                  }
+                }}
+              >
+                Todo hinzufügen
+              </button>{' '}
+              <br />
+            </>
           )}
           {role === 'admin' && (
             <>
-          <h1>Person hinzufügen</h1>
-          <input
-            type="text"
-            placeholder="Email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
-          <select
-            value={label}
-            onChange={(e) => setUserRole(e.target.value)}
-            defaultValue={'admin'}
-          >
-            <option value="admin">Admin</option>
-            <option value="bearbeiter">Bearbeiter</option>
-            <option value="leser">Leser</option>
-          </select>
-          <button
-            onClick={async () => {
-              if (navigator.onLine === false) {
-                toast.error('Diese funktion nur mit Internetverbindung', {
-                  autoClose: 2000,
-                })
-              }
-              if (email === '') {
-                toast.error('Email darf nicht leer sein', {
-                  autoClose: 2000,
-                })
-              } else {
-                const response = await fetch(
-                  'http://localhost:4001/api/inviteTodoLists',
-                  {
-                    method: 'POST',
-                    headers: {
-                      'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                      email,
-                      groupListId: id, // Sie müssen diese Variable definieren
-                      role: userRole, // Sie müssen diese Variable definieren
-                      title: groupListTitle, // Sie müssen diese Variable definieren
-                    }),
-                    credentials: 'include',
-                  },
-                )
+              <h1>Person hinzufügen</h1>
+              <input
+                type="text"
+                placeholder="Email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
+              <select
+                value={label}
+                onChange={(e) => setUserRole(e.target.value)}
+                defaultValue={'admin'}
+              >
+                <option value="admin">Admin</option>
+                <option value="bearbeiter">Bearbeiter</option>
+                <option value="leser">Leser</option>
+              </select>
+              <button
+                onClick={async () => {
+                  if (navigator.onLine === false) {
+                    toast.error('Diese funktion nur mit Internetverbindung', {
+                      autoClose: 2000,
+                    })
+                  }
+                  if (email === '') {
+                    toast.error('Email darf nicht leer sein', {
+                      autoClose: 2000,
+                    })
+                  } else {
+                    const response = await fetch(
+                      'http://localhost:4001/api/inviteTodoLists',
+                      {
+                        method: 'POST',
+                        headers: {
+                          'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                          email,
+                          groupListId: id, // Sie müssen diese Variable definieren
+                          role: userRole, // Sie müssen diese Variable definieren
+                          title: groupListTitle, // Sie müssen diese Variable definieren
+                        }),
+                        credentials: 'include',
+                      },
+                    )
 
-                if (!response.ok) {
-                  toast.error('Fehler beim Hinzufügen der Person', {
-                    autoClose: 2000,
-                  })
-                } else if (response.status === 200) {
-                  toast.success('Person hinzugefügt', { autoClose: 2000 })
-                }
-              }
-            }}
-          >
-            Person hinzufügen
-          </button>
-          </>
+                    if (!response.ok) {
+                      toast.error('Fehler beim Hinzufügen der Person', {
+                        autoClose: 2000,
+                      })
+                    } else if (response.status === 200) {
+                      toast.success('Person hinzugefügt', { autoClose: 2000 })
+                    }
+                  }
+                }}
+              >
+                Person hinzufügen
+              </button>
+            </>
           )}
           <TodoList todos={todos} groupListId={id} />
         </>
