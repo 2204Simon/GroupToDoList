@@ -8,7 +8,7 @@ import { TodoListPouchListing } from '../types/types'
 import { AuthContext } from '../AuthContext'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
-import { Pen } from 'phosphor-react'
+import { Pen, Trash } from 'phosphor-react'
 
 const SidebarWrapper = styled.div<{ isOpen: boolean }>`
   width: ${(props) => (props.isOpen ? '25vw' : '0')};
@@ -141,6 +141,10 @@ const Sidebar = () => {
     throw new Error('Function not implemented.') // TODO: anbinden!!
   }
 
+  function deleteTodoList(_id: string): void {
+    throw new Error('Function not implemented.')
+  }
+
   return (
     <SidebarWrapper isOpen={isOpen}>
       {/* <CloseButton onClick={toggleSidebar}>
@@ -171,6 +175,13 @@ const Sidebar = () => {
                 >
                   <Pen size={30} />
                 </button>
+                <button
+    onClick={() => deleteTodoList(todoListName._id)}
+    style={{ width: 'auto' }}
+  >
+    <Trash size={30} />
+  </button>
+                
               </div>
             ))}
         </div>
