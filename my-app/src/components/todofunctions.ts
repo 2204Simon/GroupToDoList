@@ -1,4 +1,5 @@
 import PouchDB from 'pouchdb-browser'
+import { useCookies } from 'react-cookie'
 import { Todo, TodoDocument } from '../types/types'
 
 export function createTodo(
@@ -21,7 +22,7 @@ export function createTodo(
     dueDate: dueDate,
   })
   syncDatabases(localDB, remoteDB)
-  return todo.then(response => ({
+  return todo.then((response) => ({
     _id: response.id,
     title: title,
     description: description,
@@ -92,6 +93,20 @@ export const completeTodo = async (
     localDB,
     new PouchDB(`http://localhost:5984/${todoDatenbankName}`),
   )
+}
+
+export const getGroupListName = async (groupListId: string, cookie: any) => {
+  const localDB = new PouchDB(cookie.database)
+  try {
+    const doc: any = await localDB.get(groupListId)
+    console.log(doc)
+    const title = doc.title
+
+    return title
+  } catch (error) {
+    console.error(`Error getting document: ${error}`)
+    return null
+  }
 }
 
 const syncDatabases = (

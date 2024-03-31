@@ -1,9 +1,10 @@
 import { useParams } from 'react-router-dom'
-import { createTodo, loadTodos } from './todofunctions'
+import { createTodo, getGroupListName, loadTodos } from './todofunctions'
 import { useEffect, useState } from 'react'
 import { Todo } from '../types/types'
 import TodoList from './ToDoList'
 import { toast } from 'react-toastify'
+import { useCookies } from 'react-cookie'
 import ReactDatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
 
@@ -15,10 +16,12 @@ export default function SingleToDoList() {
   const [assignedTo, setAssignedTo] = useState('')
   const [label, setLabel] = useState('Hohe Priorität')
   const [userRole, setuUserRole] = useState('Admin')
+  const [groupListTitle, setGroupListTitle] = useState('')
   const tomorrow = new Date()
   tomorrow.setDate(tomorrow.getDate() + 1)
   const [dueDate, setDueDate] = useState<Date>(tomorrow)
   const [todos, setTodos] = useState<Array<Todo>>([])
+  const [cookie, setCookie] = useCookies(['database'])
 
   useEffect(() => {
     loadTodos(id as string)
@@ -26,15 +29,15 @@ export default function SingleToDoList() {
         setTodos(todos)
       })
       .catch(console.error)
-  }, [id])
+  }, [id, todos])
 
   useEffect(() => {
-    loadTodos(id as string)
-      .then((todos) => {
-        setTodos(todos)
+    getGroupListName(id as string, cookie)
+      .then((title) => {
+        setGroupListTitle(title)
       })
       .catch(console.error)
-  }, [todos])
+  }, [id, cookie])
 
   return (
     <div>
@@ -42,7 +45,8 @@ export default function SingleToDoList() {
         <div>Keine ID gefunden</div>
       ) : (
         <>
-          <h1>SingleToDoList Nummer {id}</h1>
+          <h1>{groupListTitle}</h1>
+          <br />
           <input
             type="text"
             value={title}
@@ -142,7 +146,7 @@ export default function SingleToDoList() {
                       email,
                       groupListId: id, // Sie müssen diese Variable definieren
                       role: userRole, // Sie müssen diese Variable definieren
-                      title: undefined, // Sie müssen diese Variable definieren
+                      title: groupListTitle, // Sie müssen diese Variable definieren
                     }),
                     credentials: 'include',
                   },
