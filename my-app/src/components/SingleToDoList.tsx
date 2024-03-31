@@ -30,7 +30,7 @@ export default function SingleToDoList() {
   const [todos, setTodos] = useState<Array<Todo>>([])
   const [cookie, setCookie] = useCookies(['database'])
 
-  const [role, setRole] = useState('admin')
+  const [role, setRole] = useState('')
   useEffect(() => {
     loadTodos(id as string)
       .then((todos) => {
@@ -65,8 +65,8 @@ export default function SingleToDoList() {
         .catch((error) => console.error('error', error))
       findRoleForTodoList(id as string, cookie)
         .then((role: string) => {
+          console.log(role, 'role users')
           setRole(role)
-          console.log(role)
         })
         .catch(console.error)
     })
