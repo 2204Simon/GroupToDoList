@@ -11,7 +11,9 @@ export function createTodo(
   label: string,
   dueDate: Date,
 ): Promise<Todo> {
-  const remoteDB = new PouchDB(`http://localhost:5984/${todoDatenbankName}`)
+  const remoteDB = new PouchDB(
+    `http://${encodeURIComponent('admin')}:${encodeURIComponent('12345')}@localhost:5984/${todoDatenbankName}`,
+  )
   const localDB = new PouchDB(todoDatenbankName)
   const todo = localDB.post({
     title: title,
@@ -40,7 +42,7 @@ export const loadTodos = async (
   const allDocs = await localDB.allDocs({ include_docs: true })
   return allDocs.rows.reduce((todos, row) => {
     const doc = row.doc as TodoDocument
-    if (doc) {
+    if (doc && doc.type !== 'roles') {
       todos.push({
         _id: doc._id,
         title: doc.title,
@@ -61,7 +63,9 @@ export const deleteTodo = async (todoDatenbankName: string, id: string) => {
   await localDB.remove(doc)
   syncDatabases(
     localDB,
-    new PouchDB(`http://localhost:5984/${todoDatenbankName}`),
+    new PouchDB(
+      `http://${encodeURIComponent('admin')}:${encodeURIComponent('12345')}@localhost:5984/${todoDatenbankName}`,
+    ),
   )
 }
 
@@ -75,7 +79,9 @@ export const updateTodo = async (
   await localDB.put({ ...doc, ...updatedTodo })
   syncDatabases(
     localDB,
-    new PouchDB(`http://localhost:5984/${todoDatenbankName}`),
+    new PouchDB(
+      `http://${encodeURIComponent('admin')}:${encodeURIComponent('12345')}@localhost:5984/${todoDatenbankName}`,
+    ),
   )
 }
 
@@ -91,7 +97,9 @@ export const completeTodo = async (
   await localDB.put({ ...doc, completed: isCompleted })
   syncDatabases(
     localDB,
-    new PouchDB(`http://localhost:5984/${todoDatenbankName}`),
+    new PouchDB(
+      `http://${encodeURIComponent('admin')}:${encodeURIComponent('12345')}@localhost:5984/${todoDatenbankName}`,
+    ),
   )
 }
 

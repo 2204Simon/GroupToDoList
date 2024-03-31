@@ -96,34 +96,36 @@ export async function addMemberToRole(
   role: string,
   groupListId: string,
 ) {
-  const user = await findUserByEmail(userEmail)
-  if (!user) {
-    console.error(`User with email ${userEmail} does not exist.`)
-    return null
-  }
-  console.log('user meber find')
-  const query = {
-    selector: {
-      type: { $eq: 'roles' },
-    },
-  }
-
   try {
+    const user = await findUserByEmail(userEmail)
+    if (!user) {
+      console.error(`User with email ${userEmail} does not exist.`)
+      return null
+    }
+    console.log('user member find')
+    const query = {
+      selector: {
+        type: { $eq: 'roles' },
+      },
+    }
+
     const { data: docs } = await couch.mango(groupListId, query, {})
     const roleDoc = docs.docs[0]
     if (!roleDoc) {
       throw new Error('Role document not found')
     }
-
+    console.log('old', roleDoc)
     if (!Array.isArray(roleDoc.member)) {
       roleDoc.member = []
     }
     roleDoc.member.push({ email: user.email, role })
 
     // Update the document
-    console.log(roleDoc)
+    console.log('new role doc', roleDoc)
 
     const updateResponse = await couch.update(groupListId, roleDoc)
+    console.log('updateResponse', updateResponse)
+
     return updateResponse
   } catch (error) {
     console.error(`Error updating role document: ${error}`)

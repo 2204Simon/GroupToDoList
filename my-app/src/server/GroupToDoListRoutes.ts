@@ -47,6 +47,7 @@ GroupToDoListRoutes.post('/todolists', async (req, res) => {
       await couch.insert(userDatabaseId, {
         _id: groupListId,
         title,
+        email: user.email,
         dbName,
       })
       res.json({ message: 'Todo-Liste erfolgreich erstellt', groupListId }) // Senden Sie die ID zurück
@@ -99,6 +100,7 @@ GroupToDoListRoutes.post('/inviteTodoLists', async (req, res) => {
     await couch.insert(user.databaseId, {
       _id: groupListId,
       title,
+      email: user.email,
       groupListId,
     })
     await addMemberToRole(email, role, groupListId)
