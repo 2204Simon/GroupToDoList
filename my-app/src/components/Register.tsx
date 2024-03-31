@@ -8,6 +8,7 @@ import {
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import styled from 'styled-components'
+import { useCookies } from 'react-cookie'
 
 const BlurBackground = styled.div`
   position: fixed;
@@ -26,6 +27,7 @@ function Register() {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [email, setEmail] = useState('')
+  const [cookies] = useCookies(['token']);
 
   const navigate = useNavigate()
 
@@ -89,6 +91,17 @@ function Register() {
           >
             <strong>Hier</strong> einloggen
           </span>
+          <br />
+          
+          {cookies.token && (
+  <span
+    style={{ cursor: 'pointer' }}
+    onClick={() => navigate(-1)}
+  >
+    Hier gehts <strong>Zurück</strong> 
+  </span>
+)}
+          
           
         </p>
       </LoginCard>
