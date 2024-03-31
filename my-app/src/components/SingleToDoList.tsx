@@ -21,7 +21,7 @@ export default function SingleToDoList() {
   const [email, setEmail] = useState('')
   const [assignedTo, setAssignedTo] = useState('')
   const [label, setLabel] = useState('Hohe Priorität')
-  const [userRole, setUserRole] = useState('admin')
+  const [userRole, setUserRole] = useState('')
   const [groupListTitle, setGroupListTitle] = useState('')
   const [cookies] = useCookies(['database'])
   const tomorrow = new Date()
@@ -48,23 +48,24 @@ export default function SingleToDoList() {
       localDB: PouchDB.Database,
       remoteDB: PouchDB.Database,
     ) => {
-      localDB.sync(remoteDB, {
+      await localDB.sync(remoteDB, {
         live: true,
         retry: true,
       })
     }
-    syncDatabases(localDB, remoteDB)
-    getGroupListName(id as string, cookie)
-      .then((title) => {
-        setGroupListTitle(title)
-      })
-      .catch(console.error)
-    findRoleForTodoList(id as string, cookie)
-      .then((role: string) => {
-        setRole(role)
-        console.log(role)
-      })
-      .catch(console.error)
+    syncDatabases(localDB, remoteDB).then(() => {
+      getGroupListName(id as string, cookie)
+        .then((title) => {
+          setGroupListTitle(title)
+        })
+        .catch(console.error)
+      findRoleForTodoList(id as string, cookie)
+        .then((role: string) => {
+          setRole(role)
+          console.log(role)
+        })
+        .catch(console.error)
+    })
   }, [id, cookie])
 
   return (
