@@ -7,6 +7,8 @@ import { useEffect, useState } from 'react'
 import { Todo } from '../types/types'
 import TodoList from './ToDoList'
 import { toast } from 'react-toastify'
+import ReactDatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
 
 export default function SingleToDoList() {
   const { id } = useParams()
@@ -14,6 +16,9 @@ export default function SingleToDoList() {
   const [description, setDescription] = useState('')
   const [assignedTo, setAssignedTo] = useState('')
   const [label, setLabel] = useState('Hohe Priorität')
+  const tomorrow = new Date();
+tomorrow.setDate(tomorrow.getDate() + 1);
+const [dueDate, setDueDate] = useState<Date>(tomorrow);
   const [todos, setTodos] = useState<Array<Todo>>([])
   
   useEffect(() => {
@@ -69,19 +74,29 @@ export default function SingleToDoList() {
           <option value='Mittlere Priorität'>Mittlere Priorität</option>
           <option value='Niedrige Priorität'>Niedrige Priorität</option>
         </select>
-          <button
-            onClick={async () => {
-              if (title === '' || description === '') {
-                toast.error('Titel und Beschreibung dürfen nicht leer sein', { autoClose: 2000 })
-              } else {
-                const newTodo = await createTodo(id, title, description, assignedTo, false, label)
-                setTodos(prevTodos => [...prevTodos, newTodo])
-                toast.success('To-Do hinzugefügt', { autoClose: 2000 })
-              }
-            }}
-          >
-            Todo hinzufügen
-          </button>{' '}
+        <ReactDatePicker
+  selected={dueDate}
+  onChange={(date: Date) => {
+    date.setUTCHours(0, 0, 0, 0);
+    setDueDate(date);
+  }}
+  dateFormat="dd.MM.yyyy"
+  placeholderText='Fälligkeitsdatum'
+/>
+
+<button
+  onClick={async () => {
+    if (title === '' || description === '') {
+      toast.error('Titel und Beschreibung dürfen nicht leer sein', { autoClose: 2000 })
+    } else {
+      const newTodo = await createTodo(id, title, description, assignedTo, false, label, dueDate as Date)
+      setTodos(prevTodos => [...prevTodos, newTodo])
+      toast.success('To-Do hinzugefügt', { autoClose: 2000 })
+    }
+  }}
+>
+  Todo hinzufügen
+</button>{' '}
           
           <br />
           <TodoList todos={todos} groupListId={id} />

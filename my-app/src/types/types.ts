@@ -5,6 +5,8 @@ export interface Todo {
   assignedTo?: string
   completed: boolean
   label?: string
+  dueDate?: Date
+
 }
 
 export interface TodoDocument
@@ -14,6 +16,7 @@ export interface TodoDocument
   assignedTo?: string
   completed: boolean
   label?: string
+  dueDate?: Date
 }
 
 export type TodoListPouchListing = {

@@ -3,15 +3,18 @@ import {useEffect, useState} from 'react'
 import TodoList from './ToDoList'
 import { ToDoListsProps, Todo } from '../types/types'
 import { Plus } from 'phosphor-react'
+import ReactDatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
 
 const GroupToDoList: React.FC<ToDoListsProps> = ({
 }) => {
   const [todos, setTodos] = useState<Todo[]>([])
-  const [newTodo, setNewTodo] = useState({ title: '', description: '', assignedTo: '', completed: false, label: 'höhere Priorität'})
+  const [newTodo, setNewTodo] = useState({ title: '', description: '', assignedTo: '', completed: false, label: 'höhere Priorität', dueDate: new Date()})
 
   useEffect(() => {
     loadTodos()
   }, [])
+  
   const loadTodos = async () => {
     try {
       const response = await fetch('http://localhost:4001/api/todos')
@@ -23,7 +26,9 @@ const GroupToDoList: React.FC<ToDoListsProps> = ({
   }
   const addTodo = async (event: React.FormEvent) => {
     event.preventDefault()
-
+  
+    
+  
     try {
       await fetch('http://localhost:4001/api/todos', {
         method: 'POST',
@@ -33,9 +38,9 @@ const GroupToDoList: React.FC<ToDoListsProps> = ({
         credentials: 'include',
         body: JSON.stringify(newTodo),
       })
-
+  
       loadTodos()
-      setNewTodo({ title: '', description: '', assignedTo: '', completed: false, label: 'höhere Priorität'})
+      setNewTodo({ title: '', description: '', assignedTo: '', completed: false, label: 'höhere Priorität', dueDate: new Date()})
     } catch (error) {
       console.error(error)
     }
@@ -135,6 +140,18 @@ const GroupToDoList: React.FC<ToDoListsProps> = ({
   <option value="Mittlere Priorität">Mittlere Priorität</option>
   <option value="Niedrige Priorität">Niedrige Priorität</option>
 </select>
+<label htmlFor="dueDate">Fälligkeitsdatum:</label>
+<ReactDatePicker
+  id="dueDate"
+  name="dueDate"
+  selected={newTodo.dueDate}
+  onChange={(date: Date) => {
+    date.setUTCHours(0, 0, 0, 0);
+    setNewTodo({ ...newTodo, dueDate: date });
+  }}
+  dateFormat="dd.MM.yyyy"
+  placeholderText='Fälligkeitsdatum'
+/>
 
 
         <button type="submit"><Plus size={30} /></button>

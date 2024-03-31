@@ -3,6 +3,8 @@ import { Todo, TodoListItemProps } from '../types/types'
 import { FaCheck, FaTimes } from 'react-icons/fa'; 
 import { Pen, FloppyDisk, Trash } from 'phosphor-react';
 import { toast } from 'react-toastify';
+import ReactDatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
 
 interface TodoListItemActions {
   onDelete: (id: string) => void,
@@ -34,9 +36,15 @@ const TodoListItem: React.FC<TodoListItemProps & TodoListItemActions> = ({
   }
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    
-    setUpdatedTodo({ ...updatedTodo, [event.target.name]: event.target.value });
+    if (event.target.name === 'dueDate') {
+      const date = new Date(event.target.value);
+      date.setUTCHours(0, 0, 0, 0);
+      setUpdatedTodo({ ...updatedTodo, [event.target.name]: date });
+    } else {
+      setUpdatedTodo({ ...updatedTodo, [event.target.name]: event.target.value });
+    }
   }
+ 
 
   const handleToggle = () => { // Funktion zum Umschalten des erledigten Zustands
     toast.success(`To-Do ${isCompleted ? 'wiederhergestellt' : 'erledigt'}`);
@@ -52,17 +60,27 @@ const TodoListItem: React.FC<TodoListItemProps & TodoListItemActions> = ({
             <input type="text" name="title" value={updatedTodo.title} onChange={handleChange} placeholder='To-Do Titel' />
             <input type="text" name="description" value={updatedTodo.description} onChange={handleChange} placeholder='Beschreibung'/>
             <input type="text" name="assignedTo" value={updatedTodo.assignedTo} onChange={handleChange} placeholder='Zugewiesen an'/>
-          <select
-            name="label"
-            value={updatedTodo.label}
-            onChange={handleChange}
-            defaultValue={'Hohe Priorität'}
-          >
-            
+            <ReactDatePicker
+  selected={updatedTodo.dueDate}
+  onChange={(date: Date) => {
+    date.setUTCHours(0, 0, 0, 0);
+    setUpdatedTodo({ ...updatedTodo, dueDate: date });
+  }}
+  dateFormat="dd.MM.yyyy"
+  placeholderText='Fälligkeitsdatum'
+/>
+            <select
+              name="label"
+              value={updatedTodo.label}
+              onChange={handleChange}
+              defaultValue={'Hohe Priorität'}
+            >
+
             <option value="Hohe Priorität">Hohe Priorität</option>
             <option value="Mittlere Priorität">Mittlere Priorität</option>
             <option value="Niedrige Priorität">Niedrige Priorität</option>
           </select>
+
           </>
         ) : (
           <>
@@ -74,6 +92,12 @@ Beschreibung: {todo.description}
 Zugewiesen an: {todo.assignedTo}
 <br />
 Label: {todo.label}
+<br />
+Fälligkeitsdatum: {todo.dueDate ? (new Date(todo.dueDate).toLocaleDateString('de-DE', {
+  year: 'numeric',
+  month: '2-digit',
+  day: '2-digit'
+})) : ''}
           </>
         )}
       </div>
