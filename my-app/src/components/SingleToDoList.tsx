@@ -23,7 +23,8 @@ export default function SingleToDoList() {
   const [todos, setTodos] = useState<Array<Todo>>([])
   const [cookie, setCookie] = useCookies(['database'])
 
-  
+  const role = 'leser'
+
   useEffect(() => {
     loadTodos(id as string)
       .then((todos) => {
@@ -48,42 +49,48 @@ export default function SingleToDoList() {
         <>
           <h1>{groupListTitle}</h1>
           <br />
-          <input
-            type="text"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            placeholder="To-Do Titel"
-          />
-          <input
-            type="text"
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            placeholder="Beschreibung"
-          />
-          <input
-            type="text"
-            value={assignedTo}
-            onChange={(e) => setAssignedTo(e.target.value)}
-            placeholder="Zugewiesen an"
-          />
-          <select
-            value={label}
-            onChange={(e) => setLabel(e.target.value)}
-            defaultValue={'Hohe Priorität'}
-          >
-            <option value="Hohe Priorität">Hohe Priorität</option>
-            <option value="Mittlere Priorität">Mittlere Priorität</option>
-            <option value="Niedrige Priorität">Niedrige Priorität</option>
-          </select>
-          <ReactDatePicker
-            selected={dueDate}
-            onChange={(date: Date) => {
-              date.setUTCHours(0, 0, 0, 0)
-              setDueDate(date)
-            }}
-            dateFormat="dd.MM.yyyy"
-            placeholderText="Fälligkeitsdatum"
-          />
+          {(role === 'admin' || role === 'bearbeiter' ) && (
+            <>
+              <input
+                type="text"
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+                placeholder="To-Do Titel"
+              />
+              <input
+                type="text"
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+                placeholder="Beschreibung"
+              />
+              {role === 'admin' && (
+                <input
+                  type="text"
+                  value={assignedTo}
+                  onChange={(e) => setAssignedTo(e.target.value)}
+                  placeholder="Zugewiesen an"
+                />
+              )}
+              <select
+                value={label}
+                onChange={(e) => setLabel(e.target.value)}
+                defaultValue={'Hohe Priorität'}
+              >
+                <option value="Hohe Priorität">Hohe Priorität</option>
+                <option value="Mittlere Priorität">Mittlere Priorität</option>
+                <option value="Niedrige Priorität">Niedrige Priorität</option>
+              </select>
+              {role === 'admin' && (
+                <ReactDatePicker
+                  selected={dueDate}
+                  onChange={(date: Date) => {
+                    date.setUTCHours(0, 0, 0, 0)
+                    setDueDate(date)
+                  }}
+                  dateFormat="dd.MM.yyyy"
+                  placeholderText="Fälligkeitsdatum"
+                />
+              )}
           <button
             onClick={async () => {
               if (title === '' || description === '') {
@@ -108,6 +115,10 @@ export default function SingleToDoList() {
             Todo hinzufügen
           </button>{' '}
           <br />
+          </>
+          )}
+          {role === 'admin' && (
+            <>
           <h1>Person hinzufügen</h1>
           <input
             type="text"
@@ -165,6 +176,8 @@ export default function SingleToDoList() {
             }>
             Person hinzufügen
           </button>
+          </>
+          )}
           <TodoList todos={todos} groupListId={id} />
         </>
       )}

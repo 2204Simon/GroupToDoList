@@ -6,6 +6,7 @@ import { toast } from 'react-toastify';
 import ReactDatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 
+const role = 'bearbeiter'
 interface TodoListItemActions {
   onDelete: (id: string) => void,
   onEdit: (id: string, updatedTodo: Todo) => void;
@@ -102,22 +103,24 @@ Fälligkeitsdatum: {todo.dueDate ? (new Date(todo.dueDate).toLocaleDateString('d
         )}
       </div>
       <div style={{ display: 'flex', justifyContent: 'space-between', width: '30%', minWidth: '200px' }}>
-  <div style={{ display: 'flex' }}>
-    {!isEditing && (
-      <button style={{width: 'auto', marginRight: '10px'}} onClick={handleToggle}> 
-        {isCompleted ? <FaCheck size={30} /> : <button style={{width: '30px', height: '30px'}} />} 
-      </button>
-    )}
-    <button style={{width: 'auto', marginLeft: '10px'}} onClick={handleEdit}>
-      {isEditing ? <FloppyDisk size={30}/> : <Pen size={30}/>}
-    </button>
-    {!isEditing && (
-      <button style={{width: 'auto', marginLeft: '10px'}} onClick={handleDelete}><Trash size={30}/></button>
-    )}
-  </div>
-</div>
+      <div style={{ display: 'flex' }}>
+        {!isEditing && (
+          <button style={{width: 'auto', marginRight: '10px'}} onClick={handleToggle}> 
+            {isCompleted ? <FaCheck size={30} /> : <button style={{width: '30px', height: '30px'}} />} 
+          </button>
+        )}
+        {(role === 'admin' || role === 'bearbeiter') && (
+          <button style={{width: 'auto', marginLeft: '10px'}} onClick={handleEdit}>
+            {isEditing ? <FloppyDisk size={30}/> : <Pen size={30}/>}
+          </button>
+        )}
+        {(role === 'admin' || role === 'bearbeiter') && !isEditing && (
+          <button style={{width: 'auto', marginLeft: '10px'}} onClick={handleDelete}><Trash size={30}/></button>
+        )}
+      </div>
     </div>
-  )
+  </div>
+)
 }
 
 export default TodoListItem

@@ -10,6 +10,7 @@ import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import { Pen, Trash } from 'phosphor-react'
 
+const role = 'admin'
 const SidebarWrapper = styled.div<{ isOpen: boolean }>`
   width: ${(props) => (props.isOpen ? '25vw' : '0')};
   transition: 0.3s;
@@ -168,18 +169,22 @@ const Sidebar = () => {
             {todoListName.title}
           </StyledLink>
           <div style={{ display: 'flex' }}>
-            <button
-              onClick={() => editTitle(todoListName._id)}
-              style={{ width: 'auto', marginRight: '10px' }}
-            >
-              <Pen size={30} />
-            </button>
-            <button
-              onClick={() => deleteTodoList(todoListName._id)}
-              style={{ width: 'auto' }}
-            >
-              <Trash size={30} />
-            </button>
+            {(role === 'admin' || role === 'bearbeiter') && (
+              <button
+                onClick={() => editTitle(todoListName._id)}
+                style={{ width: 'auto', marginRight: '10px' }}
+              >
+                <Pen size={30} />
+              </button>
+            )}
+            {(role === 'admin' || role === 'bearbeiter') && (
+              <button
+                onClick={() => deleteTodoList(todoListName._id)}
+                style={{ width: 'auto' }}
+              >
+                <Trash size={30} />
+              </button>
+            )}
           </div>
         </div>
       ))}
