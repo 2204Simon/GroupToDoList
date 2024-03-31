@@ -6,11 +6,13 @@ import { completeTodo, deleteTodo, updateTodo } from './todofunctions'
 
 interface TodoListActions {
   groupListId: string
+  role: string
 }
 
 const TodoList: React.FC<TodoListProps & TodoListActions> = ({
   todos,
   groupListId,
+  role,
 }) => {
   function onComplete(id: string, isCompleted: boolean) {
     completeTodo(groupListId, id, isCompleted)
@@ -23,15 +25,18 @@ const TodoList: React.FC<TodoListProps & TodoListActions> = ({
   }
   return (
     <div>
-      {todos.filter(todo => todo._id !== undefined).map((todo) => (
-        <TodoListItem
-          key={todo._id}
-          todo={todo}
-          onDelete={onDelete}
-          onEdit={onEdit}
-          onComplete={onComplete}
-        />
-      ))}
+      {todos
+        .filter((todo) => todo._id !== undefined)
+        .map((todo) => (
+          <TodoListItem
+            key={todo._id}
+            role={role}
+            todo={todo}
+            onDelete={onDelete}
+            onEdit={onEdit}
+            onComplete={onComplete}
+          />
+        ))}
     </div>
   )
 }

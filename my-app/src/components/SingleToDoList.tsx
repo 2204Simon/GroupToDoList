@@ -65,8 +65,8 @@ export default function SingleToDoList() {
         .catch((error) => console.error('error', error))
       findRoleForTodoList(id as string, cookie)
         .then((role: string) => {
+          console.log(role, 'role users')
           setRole(role)
-          console.log(role)
         })
         .catch(console.error)
     })
@@ -213,7 +213,7 @@ export default function SingleToDoList() {
               </button>
             </>
           )}
-          <TodoList todos={todos} groupListId={id} />
+          <TodoList todos={todos} groupListId={id} role={role} />
         </>
       )}
     </div>
