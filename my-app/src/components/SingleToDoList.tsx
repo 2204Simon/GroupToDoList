@@ -42,7 +42,7 @@ export default function SingleToDoList() {
   useEffect(() => {
     const localDB = new PouchDB(id)
     const remoteDB = new PouchDB(
-      `http://${encodeURIComponent('admin')}:${encodeURIComponent('12345')}@localhost:5984/${cookies.database}`,
+      `http://${encodeURIComponent('admin')}:${encodeURIComponent('12345')}@localhost:5984/${id}`,
     )
     const syncDatabases = async (
       localDB: PouchDB.Database,
