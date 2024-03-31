@@ -13,6 +13,8 @@ import { GroupToDoListRoutes } from './GroupToDoListRoutes.ts'
 
 dotenv.config()
 
+
+
 export const couch = new NodeCouchDb({
   auth: {
     user: process.env.COUCHDB_USER,
@@ -22,6 +24,18 @@ export const couch = new NodeCouchDb({
   protocol: 'http',
   port: 5984,
 })
+
+async function checkCouchDB() {
+  // wenn docker container nicht läuft fehler an user zurückgeben
+  try {
+    await couch.listDatabases()
+  } catch (error) {
+    console.error('Docker Container mit CouchDB läuft nicht!')
+    process.exit(1)
+  }
+}
+
+checkCouchDB()
 
 const dbName = 'db'
 const todoDbName = 'todo'
@@ -61,5 +75,7 @@ couch.listDatabases().then((dbs: string[]) => {
     )
   }
 })
+
+
 
 app.listen(4001, () => console.log('Server is running on port 4001'))
