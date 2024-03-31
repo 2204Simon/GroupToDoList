@@ -105,7 +105,7 @@ Fälligkeitsdatum: {todo.dueDate ? (new Date(todo.dueDate).toLocaleDateString('d
   <div style={{ display: 'flex' }}>
     {!isEditing && (
       <button style={{width: 'auto', marginRight: '10px'}} onClick={handleToggle}> 
-        {isCompleted ? <FaCheck size={30} /> : <FaTimes size={30} />} 
+        {isCompleted ? <FaCheck size={30} /> : <button style={{width: '30px', height: '30px'}} />} 
       </button>
     )}
     <button style={{width: 'auto', marginLeft: '10px'}} onClick={handleEdit}>
