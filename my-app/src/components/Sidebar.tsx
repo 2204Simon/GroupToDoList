@@ -9,7 +9,11 @@ import { AuthContext } from '../AuthContext'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import { Pen, Trash } from 'phosphor-react'
-import { deleteTodoList, editTodolistTitle } from './todofunctions'
+import {
+  deleteTodoList,
+  editTodolistTitle,
+  findRoleForTodoList,
+} from './todofunctions'
 import { Floppy } from 'react-bootstrap-icons'
 
 const SidebarWrapper = styled.div<{ isOpen: boolean }>`
@@ -78,18 +82,17 @@ const StyledLink = styled(Link)`
   }
 `
 
-const testTodoIds = ['1', '2']
-
 const Sidebar = () => {
   const { isLoggedIn, setLoggedIn } = useContext(AuthContext)
   const [cookies, setCookie] = useCookies(['database'])
   const [isEding, setIsEditing] = useState(false)
   const [cookiesToken, setCookieToken] = useCookies(['token'])
   const navigate = useNavigate()
-  const [role, setRole] = useState('admin')
   const [todoListNames, setTodoListNames] = useState<
     Array<TodoListPouchListing>
   >([])
+
+  // Verwenden Sie useEffect, um die Rollen zu holen, wenn sich todoListNames ändert
   useEffect(() => {
     const syncDatabase = async () => {
       const remoteDB = new PouchDB(
@@ -120,11 +123,16 @@ const Sidebar = () => {
         include_docs: true,
       })
 
-      const todoListNames = response.rows.map((row: any) => ({
+      const todoListNames: any = response.rows.map((row: any) => ({
         dbName: row.doc.dbName,
         title: row.doc.title,
         _id: row.doc._id,
       }))
+      for (const todoList of todoListNames) {
+        const role = await findRoleForTodoList(todoList._id, cookies)
+        todoList.role = role
+      }
+      console.log(todoListNames)
       return todoListNames
     }
 
@@ -190,7 +198,8 @@ const Sidebar = () => {
                       {todoListName.title}
                     </StyledLink>
                     <div style={{ display: 'flex' }}>
-                      {(role === 'admin' || role === 'bearbeiter') && (
+                      {(todoListName.role === 'admin' ||
+                        todoListName.role === 'bearbeiter') && (
                         <button
                           onClick={() => {
                             setIsEditing(true)
@@ -205,7 +214,8 @@ const Sidebar = () => {
                           <Pen size={30} />
                         </button>
                       )}
-                      {(role === 'admin' || role === 'bearbeiter') && (
+                      {(todoListName.role === 'admin' ||
+                        todoListName.role === 'bearbeiter') && (
                         <button
                           onClick={() =>
                             deleteTodoList(todoListName._id, cookies)

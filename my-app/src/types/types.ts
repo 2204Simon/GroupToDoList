@@ -22,6 +22,7 @@ export interface TodoDocument
 export type TodoListPouchListing = {
   dbName: string
   title: string
+  role?: string
   _id: string
 }
 
